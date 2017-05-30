@@ -36,7 +36,7 @@ class Fetcher:
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
-        cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org")
+        cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org",proxies = self.proxies)
 
         #self.cookies = cookie_value
 
@@ -78,7 +78,7 @@ class Fetcher:
             ('vb_login_md5password', hashedpass),#
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
-        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout)
+        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout, proxies = self.proxies)
 
         self.cookies = res.cookies
         requests.utils.add_dict_to_cookiejar(self.cookies, cf_cookie)
@@ -111,7 +111,7 @@ class Fetcher:
             'page': '1',
         }
 
-        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout)
+        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxies)
 
         print(r.url)
         print(r.content)
@@ -128,9 +128,9 @@ class Fetcher:
 
     @staticmethod
     def clean_text_string(string):
-        string.replace("\\\\n"," ")
-        string.replace("\\\\r", " ")
-        string.replace("\\\\t", " ")
+        string = string.replace("\\n"," ")
+        string = string.replace("\\r", " ")
+        string = string.replace("\\t", " ")
         return ' '.join(string.split())
 
     def get_user_info(self, userid,db):
@@ -149,14 +149,20 @@ class Fetcher:
 
         params = {'u': userid}
 
-        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout)
+        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxies)
 
         tree = html.fromstring(r.content)
 
-        name = tree.xpath('//*[@id="username_box"]/h1//*/text()')[0]
+        names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
+
+        if len(names) == 0:
+            print("WARNING: Failed getting user id %s" % userid)
+            db.set_user_failed(self,userid)
+        else:
+            name = names[0]
+
         ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
         profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
-
 
         profiletext = str(etree.tostring(profile))
         ministattext = str(etree.tostring(ministat))

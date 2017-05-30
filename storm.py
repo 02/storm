@@ -36,10 +36,11 @@ def fetch_all_users():
     #db.set_user_processing(uid)
 
     login = db.pop_login()
+
     fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
 
     fetch.login()
-    #fetch.get_user_friendlist(1,db)
+    fetch.get_user_friendlist(1,db)
     fetch.get_user_info(1,db)
 
 

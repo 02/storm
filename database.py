@@ -145,9 +145,17 @@ class Database:
     # id,username,inserted, ..
     # status: 0 - non-processed, 1 - under processing, -1 error, 2 processed
 
+    def pop_user(self):
+        nr = self.db.user.find({'status': 0}).count()
+        ret = self.db.user.find({'status': 0}).limit(-1).skip(randint(0, nr - 1)).next()
+
+        return ret
 
     def set_user_processing(self,uid):
         result = self.db.user.update({"id": uid}, {'$set': {'processing_started': datetime.utcnow(), 'status': 1}})
+
+    def set_user_failed(self,uid):
+        result = self.db.user.update({"id": uid}, {'$set': {'processing_finished': datetime.utcnow(), 'status': -1}})
 
     def populate_users_to_be_fetched(self, fromnr, tonr):
         # Add all
@@ -156,7 +164,7 @@ class Database:
 
     def add_user(self,uid,data):
         result = self.db.user.update({"id": uid}, data, True)
-        result = self.db.user.update({"id": uid}, {'$set': {'inserted': datetime.utcnow(), 'status': 2} })
+        result = self.db.user.update({"id": uid}, {'$set': {'processing_finished': datetime.utcnow(), 'status': 2} })
 
     def add_friends(self,user_id1,with_users):
         for user_id2 in with_users:
