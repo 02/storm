@@ -46,8 +46,8 @@ class Fetcher:
             ('do', 'login'),
         )
 
-        m = hashlib.md5(self.password.encode('utf-8')).hexdigest()
-        
+        hashedpass = hashlib.md5(self.password.encode('utf-8')).hexdigest()
+
         data = [
             ('vb_login_username', self.username),
             ('vb_login_password', ''),
