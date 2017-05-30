@@ -105,7 +105,8 @@ def populate_user_database(fromnr,tonr):
 def print_instructions():
     print("storm.py <COMMAND>")
     print("Possible commands:")
-    print("--clean-database \t\t\t Empties the specified database and starts over.")
+    print("--clean-data \t\t\t Removes all scraped data.")
+    print("--clean-login \t\t\t Removes all logins and proxies.")
     print("--start-get-users <from_id> <to_id> \t\t\t Start download of users.")
     print("--continue-get-users \t\t\t Continue previous user download.")
     print("--start-get-threads <from_id> <to_id> \t\t\t Start download of threads.")
@@ -130,14 +131,22 @@ def main():
     global db
     db = database.Database("stormfront")
 
-    print(command,sys.argv[2].strip())
+   # print(command,sys.argv[2].strip())
 
-    if command == "--clean-database":
+    if command == "--clean-data":
         if query_yes_no("Are you sure you want to empty database?", "no"):
             print('Cleaning database...')
-            db.drop_all()
+            db.drop_all_data()
         else:
             print("Leaving database intact.")
+
+    elif command == "--clean-login":
+        if query_yes_no("Are you sure you want to empty database?", "no"):
+            print('Cleaning database...')
+            db.drop_login_and_proxy()
+        else:
+            print("Leaving database intact.")
+
 
     elif command == "--start-get-users":
         if len(sys.argv) != 4:

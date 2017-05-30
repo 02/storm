@@ -15,6 +15,16 @@ class Database:
         self.client = MongoClient()
         self.db = self.client[dbname]
 
+
+    def drop_all_data(self):
+        self.db.post.drop()
+        self.db.thread.drop()
+        self.db.user.drop()
+
+    def drop_login_and_proxy(self):
+        self.db.login.drop()
+        self.db.proxy.drop()
+
     ## LOGIN AND PROXY MANAGEMENT
 
     ### DATABASE STRUCTURE: ####
