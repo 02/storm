@@ -33,10 +33,14 @@ class Fetcher:
     def login(self):
 
         print("getting main page")
-        print(self.scraper.get("https://www.stormfront.org").content)
+        #print(self.scraper.get("https://www.stormfront.org").content)
+
+        cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
+
+        request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
+        print request
 
         print("Trying to log in!")
-        
 
         headers = {
             'origin': 'https://www.stormfront.org',
@@ -45,7 +49,9 @@ class Fetcher:
             #        'cookie': 'gsScrollPos=; __cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C; bb2sessionhash=b9433f62d9ed52d02089e2546c415744',
             'pragma': 'no-cache',
             'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+            'user-agent': user_agent,
+            'cookie': cookie_value,
+            #'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
             'content-type': 'application/x-www-form-urlencoded',
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'cache-control': 'no-cache',
