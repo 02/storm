@@ -151,16 +151,20 @@ class Fetcher:
         ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
         profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
+
         profiletext = etree.tostring(profile)
         ministattext = etree.tostring(ministat)
+
+        #Clean out multiple line breaks and whitespaces
+        profiletextonly = ' '.join(etree.tostring(profile,method='text').split())
+        ministattextonly = ' '.join(etree.tostring(ministat, method='text').split())
 
         print("name", name)
         print("ministat", ministat)
         print("profile", profile)
 
-        data = {'id': userid, 'name': name, 'ministat': ministattext, 'profile': profiletext}
+        data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,'ministattext': profiletextonly, 'profiletext': ministattextonly}
         db.add_user(userid,data)
-
 
 
     def fetch_thread_page(self,tid,page,db):
