@@ -120,6 +120,8 @@ class Fetcher:
         names = tree.xpath('//a[@class="bigusername"]')
         with_ids = [name.attrib['href'].split("=")[1] for name in names]
 
+        pprint.pprint(names)
+
         #SAVE TO DATABASE
 
         db.add_friends(userid,with_ids)
