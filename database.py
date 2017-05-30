@@ -120,9 +120,9 @@ class Database:
             self.db.thread.update({'id': i},{'id': i},True)
 
     def pop_thread(self):
-        nr = self.db.thread.find({'processing_start', {'$exists': False}}).count()
+        nr = self.db.thread.find({'processing_start': {'$exists': False}}).count()
         randomNr = randint(1, nr)
-        ret = self.db.thread.find({'processing_start', {'$exists': False}}).limit(-1).skip(randomNr).next()
+        ret = self.db.thread.find({'processing_start': {'$exists': False}}).limit(-1).skip(randomNr).next()
 
         # Set used
         self.db.thread.update({"id": id}, {'$set': {'processing_start': datetime.now()}})
