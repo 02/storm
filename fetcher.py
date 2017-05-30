@@ -156,8 +156,8 @@ class Fetcher:
         ministattext = str(etree.tostring(ministat))
 
         #Clean out multiple line breaks and whitespaces
-        profiletextonly = ' '.join(etree.tostring(profile,method='text').split())
-        ministattextonly = ' '.join(etree.tostring(ministat, method='text').split())
+        profiletextonly = ' '.join(str(etree.tostring(profile,method='text')).split())
+        ministattextonly = ' '.join(str(etree.tostring(ministat, method='text')).split())
 
         print("name", name)
         print("ministat", ministat)
