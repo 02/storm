@@ -50,7 +50,7 @@ class Database:
 
     def push_proxy(self, ip):
         data = {"ip":ip, "broken": None,"used": None}
-        result = self.db.login.update({"ip": ip}, data, True)
+        result = self.db.proxy.update({"ip": ip}, data, True)
 
     def set_login_not_used(self,username):
         self.db.login.update({"username": username}, {'$set', {'used', None}})
