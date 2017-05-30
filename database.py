@@ -113,9 +113,8 @@ class Database:
         self.db.thread.update({"id": id}, {'$set', {'processing_start', '$currentTimestamp'}})
         return ret
 
-## Posts
-
-     def add_post(self,id,data):
+    ## Posts
+    def add_post(self,id,data):
         result = self.db.post.update({"id": id}, data, True)
         result = self.db.post.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
 
