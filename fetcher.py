@@ -1,6 +1,7 @@
 
 import pprint
 import requests
+import cfscrape
 import datetime
 import hashlib
 
@@ -17,6 +18,9 @@ class Fetcher:
         self.password = password
         self.timeout = timeout
 
+        self.scraper = cfscrape.create_scraper()
+
+
         if proxy is not None:
             self.proxy = {
                 'https': proxy,
@@ -27,6 +31,9 @@ class Fetcher:
 
 
     def login(self):
+
+
+
         headers = {
             'origin': 'https://www.stormfront.org',
             'accept-encoding': 'gzip, deflate, br',
@@ -59,7 +66,7 @@ class Fetcher:
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
 
-        res = requests.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data, timeout=self.timeout)
+        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data, timeout=self.timeout)
         cookie = res.cookies
 
         pprint.pprint(res)
@@ -89,7 +96,7 @@ class Fetcher:
             ('page', '1'),
         )
 
-        r = requests.get('https://www.stormfront.org/forum/member.php',
+        r = self.scraper.get('https://www.stormfront.org/forum/member.php',
                          headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
         tree = html.fromstring(r.content)
@@ -117,7 +124,7 @@ class Fetcher:
             ('u', userid),
         )
 
-        r = requests.get('https://www.stormfront.org/forum/member.php',
+        r = self.scraper.get('https://www.stormfront.org/forum/member.php',
                          headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
         tree = html.fromstring(r.content)
@@ -154,7 +161,7 @@ class Fetcher:
         }
         params = (
         )
-        r = requests.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
+        r = self.scraper.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
                          headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
         tree = html.fromstring(r.content)
 
