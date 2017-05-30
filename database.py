@@ -85,8 +85,7 @@ class Database:
 
     def assign_login_a_random_unused_proxy(self,username):
         nrproxies = self.db.proxy.find().count()
-        randomNr = randint(1,nrproxies)
-        ret = self.db.proxy.find({'used': None, 'broken': None}).limit(-1).skip(randomNr).next()
+        ret = self.db.proxy.find({'used': None, 'broken': None}).limit(-1).skip(randint(0,nrproxies-1)).next()
 
         ip = ret['ip']
 
