@@ -93,7 +93,7 @@ class Database:
         self.db.proxy.update({"ip": ip}, {'$set': {'used': '$currentTimestamp'}})
 
         #Assign to user
-        self.db.login.update({"username": username}, {'$set', {'proxy', ip}})
+        self.db.login.update({"username": username}, {'$set': {'proxy': ip}})
 
         return ip
 
