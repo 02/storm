@@ -126,6 +126,12 @@ class Fetcher:
 
         db.add_friends(userid,with_ids)
 
+    @staticmethod
+    def clean_text_string(string):
+        string.replace("\\\\n"," ")
+        string.replace("\\\\r", " ")
+        string.replace("\\\\t", " ")
+        return ' '.join(string.split())
 
     def get_user_info(self, userid,db):
         # headers = {
@@ -156,12 +162,14 @@ class Fetcher:
         ministattext = str(etree.tostring(ministat))
 
         #Clean out multiple line breaks and whitespaces
-        profiletextonly = ' '.join(str(etree.tostring(profile,method='text')).split())
-        ministattextonly = ' '.join(str(etree.tostring(ministat, method='text')).split())
+        profiletextonly = Fetcher.clean_text_string(str(etree.tostring(profile, method='text')))
+        ministattextonly = Fetcher.clean_text_string(str(etree.tostring(ministat, method='text')))
 
         print("name", name)
         print("ministat", ministat)
         print("profile", profile)
+        print("ministattext", ministattextonly)
+        print("profiletext", profiletextonly)
 
         data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
                 'ministattext': profiletextonly, 'profiletext': ministattextonly}
