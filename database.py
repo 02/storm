@@ -111,8 +111,8 @@ class Database:
         result = self.db.thread.update({"id": id}, data, True)
         result = self.db.thread.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
 
-    def thread_completed(self,id):
-        result = self.db.thread.update({"id": id}, {'$set': {'completed': datetime.utcnow()}})
+    def thread_completed(self,tid):
+        result = self.db.thread.update({"id": tid}, {'$set': {'completed': datetime.utcnow()}})
 
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
@@ -130,9 +130,10 @@ class Database:
         return ret
 
     ## Posts
-    def add_post(self,id,data):
-        result = self.db.post.update({"id": id}, data, True)
-        result = self.db.post.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
+    def add_post(self,pid,data):
+        print("Adding post ", pid, " to database")
+        result = self.db.post.update({"id": pid}, data, True)
+        result = self.db.post.update({"id": pid}, {'$set': {'inserted': datetime.utcnow()}})
 
     #### Users management
 

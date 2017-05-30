@@ -133,9 +133,9 @@ class Fetcher:
 
 
 
+
     def fetch_thread_page(self,tid,page,db):
 
-        ############ TODO: If page == 1 we should also fetch thread info from page and set that in database!
 
 
         headers = {
@@ -160,12 +160,17 @@ class Fetcher:
         if "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).count("No Thread specified.") > 0:
             #thread does not exist
             print("No such thread")
+
             return False
 
         else:
+            if page == 1:
+                print("This is first page of thread. Will add thread info to db!")
+                print("TODO TODO TODO!")
+                #TODO: extract thread info!
+
 
             #Process posts
-
             i = 0
             for message in tree.xpath("//div[@id='posts']//table[starts-with(@id,'post')]"):
                 i = i + 1
@@ -184,6 +189,7 @@ class Fetcher:
 
                 quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
                 hasquote = False
+                quoteofpostid, quoteofusername,quotehtml,quotetxt  = None,None,None,None
                 if len(quote) > 0:
                     hasquote = True
                     quoteofpostid = quote[0].attrib["href"].split("post")[1]
@@ -196,6 +202,12 @@ class Fetcher:
                     print(quoteofusername, quoteofpostid, quotehtml, quotetxt)
 
                 #ADD TO DATABASE
+                data = {'id': messageid, 'authorid': authorid, 'posteddate': dateparse, 'fullmessage': fullmessage,
+                        'fullmessagehtml': fullmessagehtml, 'cleanmessage': cleanmessage, 'signature': signature,
+                        'title': title, 'hasquote': hasquote, 'quoteofpostid': quoteofpostid, 'quoteofusername': quoteofusername,
+                        'quotehtml': quotehtml,'quotetxt': quotetxt}
+
+                db.add_post(messageid, data)
 
             print("BP")
 

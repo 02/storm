@@ -45,7 +45,7 @@ def fetch_all_users():
         page = 1
         has_more_pages = True
         while has_more_pages:
-            has_more_pages = fetch.fetch_thread_page(id, page)
+            has_more_pages = fetch.fetch_thread_page(id, page, db)
             page += 1
             short_pause()
 
