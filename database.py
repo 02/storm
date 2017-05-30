@@ -76,7 +76,7 @@ class Database:
         self.db.login.update({"username": username}, {'$set': {'used': '#currentTimestamp'}})
 
         if ret['proxy'] is None:
-            ret['proxy'] = self.assign_user_a_random_unused_proxy(username)
+            ret['proxy'] = self.assign_login_a_random_unused_proxy(username)
 
         return ret
 
@@ -97,7 +97,7 @@ class Database:
 
     def set_proxy_down(self,ip,username):
         self.db.proxy.update({"ip": ip}, {'$set': {'broken': '$currentTimestamp'}})
-        return self.assign_user_a_random_unused_proxy(username)
+        return self.assign_login_a_random_unused_proxy(username)
 
     ######### Thread management
     #Data structure
