@@ -32,7 +32,11 @@ class Fetcher:
 
     def login(self):
 
+        print("getting main page")
+        print(self.scraper.get("https://www.stormfront.org").content)
 
+        print("Trying to log in!")
+        
 
         headers = {
             'origin': 'https://www.stormfront.org',
