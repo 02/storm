@@ -52,6 +52,7 @@ def fetch_all_users():
 
 
 def fetch_all_threads():
+    print("Not yet implemented.")
     # Repeat:
         # Login
         # Repeat:
@@ -60,25 +61,6 @@ def fetch_all_threads():
             # Pause randomly
         #sleep a bit
 
-
-
-
-def get_random_proxy():
-# call db.get_random_proxy_and_mark_used()
-# return proxy
-# if return null, throw error
-
-def set_proxy_down_get_new_one(ip):
-    db.set_proxy_down(ip)
-
-
-# db.set_proxy_down(ip)
-
-def get_random_user():
-
-
-# call db.get_random_user_mark_used()
-# if return null, throw error
 
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
