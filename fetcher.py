@@ -69,6 +69,8 @@ class Fetcher:
         res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data, timeout=self.timeout)
         cookie = res.cookies
 
+        res.raise_for_status()
+
         pprint.pprint(res)
 
         self.cookies = cookie
