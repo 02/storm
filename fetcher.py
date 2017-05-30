@@ -17,7 +17,8 @@ class Fetcher:
 
         if proxy is not None:
             self.proxy = {
-                'http': proxy,
+                'https': proxy,
+                'https': proxy,
             }
         else:
             self.proxy = None

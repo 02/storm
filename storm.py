@@ -126,33 +126,35 @@ def main():
         print_instructions()
         exit()
 
-    tag = sys.argv[1]
+    command = sys.argv[1].strip
     global db
     db = database.Database("stormfront")
 
-    if sys.argv[2].strip() == "--clean-database":
+    print(command,sys.argv[2].strip())
+
+    if command == "--clean-database":
         if query_yes_no("Are you sure you want to empty database?", "no"):
             print('Cleaning database...')
             db.drop_all()
         else:
             print("Leaving database intact.")
 
-    elif sys.argv[2].strip() == "--start-get-users":
+    elif command == "--start-get-users":
         if len(sys.argv) != 4:
             print_instructions()
             exit()
 
         print("Populating user database...")
 
-        populate_user_database(int(sys.argv[3]),int(sys.argv[4]))
+        populate_user_database(int(sys.argv[2]),int(sys.argv[3]))
         fetch_all_users()
 
 
-    elif sys.argv[2].strip() == "--continue-get-users":
+    elif command == "--continue-get-users":
         print("Continuing user download...")
         fetch_all_users()
 
-    elif sys.argv[2].strip() == "--start-get-threads":
+    elif command == "--start-get-threads":
 
         if len(sys.argv) != 4:
             print_instructions()
@@ -161,31 +163,31 @@ def main():
         print("Populating thread database...")
 
         # Add to thread database all number between fromid to toid.
-        db.populate_threads_to_be_fetched(int(sys.argv[3]), int(sys.argv[4]))
+        db.populate_threads_to_be_fetched(int(sys.argv[2]), int(sys.argv[3]))
 
 
         fetch_all_threads()
 
-    elif sys.argv[2].strip() == "--continue-get-users":
+    elif command == "--continue-get-users":
 
         print("Continuing user download...")
 
         fetch_all_users()
 
-    elif sys.argv[2].strip() == "--add-proxy":
+    elif command == "--add-proxy":
 
         if len(sys.argv) != 3:
             print_instructions()
             exit()
 
-        db.add_proxy(sys.argv[3])
+        db.add_proxy(sys.argv[2])
 
-    elif sys.argv[2].strip() == "--add-login":
+    elif command == "--add-login":
         if len(sys.argv) != 4:
             print_instructions()
             exit()
 
-        db.add_login(sys.argv[3],sys.argv[4])
+        db.add_login(sys.argv[2],sys.argv[3])
 
 
     #TODO later

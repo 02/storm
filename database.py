@@ -20,6 +20,7 @@ class Database:
     ### DATABASE STRUCTURE: ####
     # Proxy:
     ## ip: string <#key>
+    ## port
     ## broken: None or timestamp
     ## used: None or timestamp
 
