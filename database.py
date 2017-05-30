@@ -67,8 +67,8 @@ class Database:
 
     def pop_login(self):
         nr = self.db.login.find().count()
-        randomNr = randint(1, nr)
-        ret = self.db.login.find({'used': None, 'broken': None}).limit(-1).skip(randomNr).next()
+        print('nr users',nr)
+        ret = self.db.login.find({'used': None, 'broken': None}).limit(-1).skip(randint(0, nr-1)).next()
 
         username = ret['username']
 
