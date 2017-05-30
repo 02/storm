@@ -36,9 +36,9 @@ class Fetcher:
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
-        cookie_value, user_agent = cfscrape.get_tokens("https://www.stormfront.org")
+        cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org")
 
-        self.cookies = cookie_value
+        #self.cookies = cookie_value
 
         request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
         print(request)
@@ -79,16 +79,16 @@ class Fetcher:
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
 
-        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=self.cookies, params=params, data=data, timeout=self.timeout)
+        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout)
 
-        self.cookies.set(**res.cookies)
+        self.cookies = res.cookies
+        requests.utils.add_dict_to_cookiejar(self.cookies, cf_cookie)
 
         pprint.pprint(self.cookies)
 
-
         res.raise_for_status()
 
-        pprint.pprint(res.content)
+        print(res.content)
 
 
         #return cookie
