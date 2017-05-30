@@ -39,6 +39,7 @@ def fetch_all_users():
     fetch.login()
 
     fetch.get_user_friendlist(1,db)
+    fetch.get_user_info(1,db)
 
 
 

@@ -149,11 +149,11 @@ class Database:
         for i in range(fromnr, tonr):
             self.db.user.update({'id': i}, {'id': i}, True)
 
-    def add_user(self,id,data):
-        result = self.db.user.update({"id": id}, data, True)
-        result = self.db.user.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
+    def add_user(self,uid,data):
+        result = self.db.user.update({"id": uid}, data, True)
+        result = self.db.user.update({"id": uid}, {'$set': {'inserted': datetime.utcnow()}})
 
     def add_friends(self,user_id1,with_users):
         for user_id2 in with_users:
-            data = {"id1": user_id1,"id1": user_id2}
+            data = {"id1": user_id1,"id2": user_id2}
             self.db.friend.update(data, data, True)
