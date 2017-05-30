@@ -41,11 +41,12 @@ class Database:
     # assign_user_a_random_unused_proxy()
     # return new proxy
 
-    def push_login(self, username, data):
+    def push_login(self, username, password):
+        data = {"username":username,"password":password,"used": None, "proxy": None}
         result = self.db.login.update({"username": username}, data, True)
 
-        #if result['updatedExisting']:
-         #   print('User already existed. Updated.')
+        if result['updatedExisting']:
+            print('User already existed. Updated.')
 
     def push_proxy(self, ip):
         data = {"ip":ip, "broken": None,"used": None}

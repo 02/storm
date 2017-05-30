@@ -187,7 +187,7 @@ def main():
             print_instructions()
             exit()
 
-        db.add_login(sys.argv[2],sys.argv[3])
+        db.push_login(sys.argv[2],sys.argv[3])
 
 
     #TODO later
