@@ -50,7 +50,7 @@ class Fetcher:
             'pragma': 'no-cache',
             'upgrade-insecure-requests': '1',
             'user-agent': user_agent,
-            'cookie': cookie_value,
+            #'cookie': cookie_value,
             #'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
             'content-type': 'application/x-www-form-urlencoded',
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -76,14 +76,19 @@ class Fetcher:
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
 
-        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, params=params, data=data, timeout=self.timeout)
-        cookie = res.cookies
+        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cookie_value, params=params, data=data, timeout=self.timeout)
+
+        #s.cookies.set(**my_cookie)
+        self.cookies = res.cookies
+
+        pprint(self.cookies)
+
 
         res.raise_for_status()
 
-        pprint.pprint(res)
+        pprint.pprint(res.content)
 
-        self.cookies = cookie
+
         #return cookie
 
 

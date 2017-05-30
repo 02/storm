@@ -156,4 +156,4 @@ class Database:
     def add_friends(self,user_id1,with_users):
         for user_id2 in with_users:
             data = {"id1": user_id1,"id1": user_id2}
-            self.db.user.update(data, data, True)
+            self.db.friend.update(data, data, True)
