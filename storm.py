@@ -118,7 +118,7 @@ def print_instructions():
 
 
 def main():
-    print "Starting up!"
+    print("Starting up!")
 
 
     if len(sys.argv) < 2:
