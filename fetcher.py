@@ -35,7 +35,9 @@ class Fetcher:
         print("getting main page")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
-        cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
+        #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
+        cookie_value, user_agent = cfscrape.get_tokens("https://www.stormfront.org")
+
 
         request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
         print(request)
