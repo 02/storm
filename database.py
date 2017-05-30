@@ -63,7 +63,7 @@ class Database:
         result = self.db.proxy.update({"ip": ip}, data, True)
 
     def set_login_not_used(self,username):
-        self.db.login.update({"username": username}, {'$set', {'used', None}})
+        self.db.login.update({"username": username}, {'$set': {'used': None}})
 
     def pop_login(self):
         nr = self.db.login.find().count()
@@ -73,7 +73,7 @@ class Database:
         username = ret['username']
 
         # Set used
-        self.db.login.update({"username": username}, {'$set', {'used', '#currentTimestamp'}})
+        self.db.login.update({"username": username}, {'$set': {'used': '#currentTimestamp'}})
 
         if ret['proxy'] is None:
             ret['proxy'] = self.assign_user_a_random_unused_proxy(username)
@@ -88,7 +88,7 @@ class Database:
         ip = ret['ip']
 
         #Set used
-        self.db.proxy.update({"ip": ip}, {'$set',{'used','$currentTimestamp'}})
+        self.db.proxy.update({"ip": ip}, {'$set': {'used': '$currentTimestamp'}})
 
         #Assign to user
         self.db.login.update({"username": username}, {'$set', {'proxy', ip}})
@@ -96,7 +96,7 @@ class Database:
         return ip
 
     def set_proxy_down(self,ip,username):
-        self.db.proxy.update({"ip": ip}, {'$set', {'broken', '$currentTimestamp'}})
+        self.db.proxy.update({"ip": ip}, {'$set': {'broken': '$currentTimestamp'}})
         return self.assign_user_a_random_unused_proxy(username)
 
     ######### Thread management
@@ -109,10 +109,10 @@ class Database:
 
     def add_thread(self,id,data):
         result = self.db.thread.update({"id": id}, data, True)
-        result = self.db.thread.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
+        result = self.db.thread.update({"id": id}, {'$set': {'inserted': '$currentTimestamp'}})
 
     def thread_completed(self,id):
-        result = self.db.thread.update({"id": id}, {'$set', {'completed', '$currentTimestamp'}})
+        result = self.db.thread.update({"id": id}, {'$set': {'completed': '$currentTimestamp'}})
 
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
@@ -125,13 +125,13 @@ class Database:
         ret = self.db.thread.find({'processing_start', {'$exists': False}}).limit(-1).skip(randomNr).next()
 
         # Set used
-        self.db.thread.update({"id": id}, {'$set', {'processing_start', '$currentTimestamp'}})
+        self.db.thread.update({"id": id}, {'$set': {'processing_start': '$currentTimestamp'}})
         return ret
 
     ## Posts
     def add_post(self,id,data):
         result = self.db.post.update({"id": id}, data, True)
-        result = self.db.post.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
+        result = self.db.post.update({"id": id}, {'$set': {'inserted': '$currentTimestamp'}})
 
     #### Users management
 
@@ -149,7 +149,7 @@ class Database:
 
     def add_user(self,id,data):
         result = self.db.user.update({"id": id}, data, True)
-        result = self.db.user.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
+        result = self.db.user.update({"id": id}, {'$set': {'inserted': '$currentTimestamp'}})
 
     def add_friends(self,user_id1,user_id2):
         data = {"id1": user_id1,"id1": user_id2}
