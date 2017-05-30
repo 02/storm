@@ -51,6 +51,9 @@ class Database:
     # assign_user_a_random_unused_proxy()
     # return new proxy
 
+    def set_all_logins_not_used(self):
+        self.db.login.update({}, {'$set': {'used': None}})
+
     def push_login(self, username, password):
         data = {"username":username,"password":password,"used": None, "proxy": None}
         result = self.db.login.update({"username": username}, data, True)
@@ -73,7 +76,7 @@ class Database:
         username = ret['username']
 
         # Set used
-        self.db.login.update({"username": username}, {'$set': {'used': '#currentTimestamp'}})
+        self.db.login.update({"username": username}, {'$set': {'used': '$currentTimestamp'}})
 
         if ret['proxy'] is None:
             ret['proxy'] = self.assign_login_a_random_unused_proxy(username)

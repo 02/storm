@@ -127,6 +127,9 @@ def main():
     global db
     db = database.Database("stormfront")
 
+    db.set_logins_not_used()
+
+
    # print(command,sys.argv[2].strip())
 
     if command == "--clean-data":
