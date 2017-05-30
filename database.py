@@ -7,8 +7,6 @@ from random import randint
 import time
 
 
-
-
 class Database:
     def __init__(self, dbname):
         print("Connecting to database")

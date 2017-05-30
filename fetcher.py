@@ -1,10 +1,12 @@
-from lxml import html
-from lxml import etree
 
 import pprint
 import requests
 import datetime
 import hashlib
+
+from lxml import html
+from lxml import etree
+
 
 
 class Fetcher:

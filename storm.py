@@ -1,11 +1,13 @@
 #from multiprocessing import Pool
 import sys
-import database
 import os
-import database
-import fetcher
 import random
 import time
+
+##
+import database
+import fetcher
+
 
 db = None
 
@@ -32,7 +34,7 @@ def fetch_all_users():
         #sleep a bit
 
     login = db.pop_login()
-    fetcher = Fetcher(login['username'],login['password'],login['proxy'])
+    fetcher = fetcher.Fetcher(login['username'],login['password'],login['proxy'])
 
     fetcher.login()
 
