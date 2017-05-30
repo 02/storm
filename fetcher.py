@@ -32,7 +32,7 @@ class Fetcher:
 
     def login(self):
 
-        print("getting main page")
+        print("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
@@ -43,7 +43,7 @@ class Fetcher:
         #request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
         #print(request)
 
-        print("Trying to log in!")
+        print("Logging in with user %s..." % self.username)
 
         self.headers = {
             'origin': 'https://www.stormfront.org',
@@ -78,20 +78,15 @@ class Fetcher:
             ('vb_login_md5password', hashedpass),#
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
-
         res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout)
 
         self.cookies = res.cookies
         requests.utils.add_dict_to_cookiejar(self.cookies, cf_cookie)
 
-        pprint.pprint(self.cookies)
+        #pprint.pprint(self.cookies)
 
         res.raise_for_status()
 
-        print(res.content)
-
-
-        #return cookie
 
 
 
@@ -109,15 +104,16 @@ class Fetcher:
         #     'referer': 'https://www.stormfront.org/forum/login.php?do=login',
         # }
 
-        params = (
-            ('tab', 'friends'),
-            ('u', userid),
-            ('pp', '10000'),
-            ('page', '1'),
-        )
+        params = {
+            'tab': 'friends',
+            'u': userid,
+            'pp': '10000',
+            'page': '1',
+        }
 
         r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
+        print(r.url)
         print(r.content)
 
         tree = html.fromstring(r.content)
