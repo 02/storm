@@ -152,8 +152,8 @@ class Fetcher:
         profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
 
-        profiletext = etree.tostring(profile)
-        ministattext = etree.tostring(ministat)
+        profiletext = str(etree.tostring(profile))
+        ministattext = str(etree.tostring(ministat))
 
         #Clean out multiple line breaks and whitespaces
         profiletextonly = ' '.join(etree.tostring(profile,method='text').split())
@@ -163,7 +163,8 @@ class Fetcher:
         print("ministat", ministat)
         print("profile", profile)
 
-        data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,'ministattext': profiletextonly, 'profiletext': ministattextonly}
+        data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
+                'ministattext': profiletextonly, 'profiletext': ministattextonly}
         db.add_user(userid,data)
 
 
