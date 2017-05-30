@@ -76,7 +76,7 @@ class Fetcher:
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
 
-        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data, timeout=self.timeout)
+        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, params=params, data=data, timeout=self.timeout)
         cookie = res.cookies
 
         res.raise_for_status()
@@ -112,11 +112,12 @@ class Fetcher:
         r = self.scraper.get('https://www.stormfront.org/forum/member.php',
                          headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
+        print(r.content)
+
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
         with_ids = [name.attrib['href'].split("=")[1] for name in names]
 
-        print('bp')
         #SAVE TO DATABASE
 
         db.add_friends(userid,with_ids)
