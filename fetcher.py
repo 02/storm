@@ -40,8 +40,8 @@ class Fetcher:
 
         #self.cookies = cookie_value
 
-        request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
-        print(request)
+        #request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
+        #print(request)
 
         print("Trying to log in!")
 
