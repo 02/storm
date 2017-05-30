@@ -62,6 +62,8 @@ class Fetcher:
         res = requests.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data, timeout=self.timeout)
         cookie = res.cookies
 
+        pprint.pprint(res)
+
         self.cookies = cookie
         #return cookie
 
@@ -209,7 +211,6 @@ class Fetcher:
 
                 db.add_post(messageid, data)
 
-            print("BP")
 
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0

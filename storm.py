@@ -37,19 +37,19 @@ def fetch_all_users():
     fetch = fetcher.Fetcher(login['username'],login['password'],login['proxy'])
 
     fetch.login()
-
-    while(True):
-        thread = db.pop_thread()
-        id = thread['id']
-
-        page = 1
-        has_more_pages = True
-        while has_more_pages:
-            has_more_pages = fetch.fetch_thread_page(id, page, db)
-            page += 1
-            short_pause()
-
-        db.thread_completed(id)
+    #
+    # while(True):
+    #     thread = db.pop_thread()
+    #     id = thread['id']
+    #
+    #     page = 1
+    #     has_more_pages = True
+    #     while has_more_pages:
+    #         has_more_pages = fetch.fetch_thread_page(id, page, db)
+    #         page += 1
+    #         short_pause()
+    #
+    #     db.thread_completed(id)
 
 
 
