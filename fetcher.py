@@ -38,11 +38,11 @@ class Fetcher:
         cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
 
         request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
-        print request
+        print(request)
 
         print("Trying to log in!")
 
-        headers = {
+        self.headers = {
             'origin': 'https://www.stormfront.org',
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'en-US,en;q=0.8',
@@ -87,19 +87,20 @@ class Fetcher:
         #return cookie
 
 
-    def get_user_friendlist(self, userid):
-        headers = {
-            'pragma': 'no-cache',
-            'accept-encoding': 'gzip, deflate, sdch, br',
-            'accept-language': 'en-US,en;q=0.8',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'cache-control': 'no-cache',
-            'authority': 'www.stormfront.org',
-            #  'cookie': cookie, #'gsScrollPos=;__cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C;bb2lastvisit=1493064370; bb2lastactivity=0; bb2sessionhash=a3ef28efe4019980f3c84ed019b33386',
-            'referer': 'https://www.stormfront.org/forum/login.php?do=login',
-        }
+
+    def get_user_friendlist(self, userid, db):
+        # headers = {
+        #     'pragma': 'no-cache',
+        #     'accept-encoding': 'gzip, deflate, sdch, br',
+        #     'accept-language': 'en-US,en;q=0.8',
+        #     'upgrade-insecure-requests': '1',
+        #     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+        #     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        #     'cache-control': 'no-cache',
+        #     'authority': 'www.stormfront.org',
+        #     #  'cookie': cookie, #'gsScrollPos=;__cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C;bb2lastvisit=1493064370; bb2lastactivity=0; bb2sessionhash=a3ef28efe4019980f3c84ed019b33386',
+        #     'referer': 'https://www.stormfront.org/forum/login.php?do=login',
+        # }
 
         params = (
             ('tab', 'friends'),
@@ -109,14 +110,17 @@ class Fetcher:
         )
 
         r = self.scraper.get('https://www.stormfront.org/forum/member.php',
-                         headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
+                         headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
-        ids = [name.attrib['href'].split("=")[1] for name in names]
+        with_ids = [name.attrib['href'].split("=")[1] for name in names]
 
         print('bp')
         #SAVE TO DATABASE
+
+        db.add_friends(userid,with_ids)
+
 
     def get_user_info(self, userid):
         headers = {

@@ -37,6 +37,18 @@ def fetch_all_users():
     fetch = fetcher.Fetcher(login['username'],login['password'],login['proxy'])
 
     fetch.login()
+
+    fetch.get_user_friendlist(1,db)
+
+
+
+def fetch_all_threads():
+    print("Not yet implemented.")
+    #
+    # login = db.pop_login()
+    # fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+    #
+    # fetch.login()
     #
     # while(True):
     #     thread = db.pop_thread()
@@ -50,11 +62,6 @@ def fetch_all_users():
     #         short_pause()
     #
     #     db.thread_completed(id)
-
-
-
-def fetch_all_threads():
-    print("Not yet implemented.")
     # Repeat:
         # Login
         # Repeat:
