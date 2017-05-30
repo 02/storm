@@ -158,8 +158,8 @@ class Fetcher:
         print("ministat", ministat)
         print("profile", profile)
 
-        data = {'id': userid, 'name': name, 'ministat': ministat, 'profile': profile,'ministattext': ministattext, 'profiletext': profiletext}
-        db.adduser(userid,data)
+        data = {'id': userid, 'name': name, 'ministat': ministattext, 'profile': profiletext}
+        db.add_user(userid,data)
 
 
 
