@@ -143,15 +143,20 @@ class Database:
 
     # User:
     # id,username,inserted, ..
+    # status: 0 - non-processed, 1 - under processing, -1 error, 2 processed
+
+
+    def set_user_processing(self,uid):
+        result = self.db.user.update({"id": uid}, {'$set': {'processing_started': datetime.utcnow(), 'status': 1}})
 
     def populate_users_to_be_fetched(self, fromnr, tonr):
         # Add all
         for i in range(fromnr, tonr):
-            self.db.user.update({'id': i}, {'id': i}, True)
+            self.db.user.update({'id': i}, {'id': i,'status': 0}, True)
 
     def add_user(self,uid,data):
         result = self.db.user.update({"id": uid}, data, True)
-        result = self.db.user.update({"id": uid}, {'$set': {'inserted': datetime.utcnow()}})
+        result = self.db.user.update({"id": uid}, {'$set': {'inserted': datetime.utcnow(), 'status': 2} })
 
     def add_friends(self,user_id1,with_users):
         for user_id2 in with_users:
