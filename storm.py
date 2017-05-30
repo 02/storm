@@ -97,10 +97,6 @@ def query_yes_no(question, default="yes"):
 
 ### Callable functions
 
-def populate_user_database(fromnr,tonr):
-    db.populate_threads_to_be_fetched(fromnr,tonr)
-
-
 
 def print_instructions():
     print("storm.py <COMMAND>")
@@ -155,7 +151,7 @@ def main():
 
         print("Populating user database...")
 
-        populate_user_database(int(sys.argv[2]),int(sys.argv[3]))
+        db.populate_users_to_be_fetched(int(sys.argv[2]),int(sys.argv[3]))
         fetch_all_users()
 
 
