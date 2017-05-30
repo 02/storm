@@ -74,7 +74,7 @@ class Database:
         username = ret['username']
 
         # Set used
-        self.db.login.update({"username": username}, {'$set': {'used': datetime.now()}})
+        self.db.login.update({"username": username}, {'$set': {'used': datetime.utcnow()}})
 
         if ret['proxy'] is None:
             ret['proxy'] = self.assign_login_a_random_unused_proxy(username)
@@ -88,7 +88,7 @@ class Database:
         ip = ret['ip']
 
         #Set used
-        self.db.proxy.update({"ip": ip}, {'$set': {'used': datetime.now()}})
+        self.db.proxy.update({"ip": ip}, {'$set': {'used': datetime.utcnow()}})
 
         #Assign to user
         self.db.login.update({"username": username}, {'$set': {'proxy': ip}})
@@ -96,7 +96,7 @@ class Database:
         return ip
 
     def set_proxy_down(self,ip,username):
-        self.db.proxy.update({"ip": ip}, {'$set': {'broken': datetime.now()}})
+        self.db.proxy.update({"ip": ip}, {'$set': {'broken': datetime.utcnow()}})
         return self.assign_login_a_random_unused_proxy(username)
 
     ######### Thread management
@@ -109,10 +109,10 @@ class Database:
 
     def add_thread(self,id,data):
         result = self.db.thread.update({"id": id}, data, True)
-        result = self.db.thread.update({"id": id}, {'$set': {'inserted': datetime.now()}})
+        result = self.db.thread.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
 
     def thread_completed(self,id):
-        result = self.db.thread.update({"id": id}, {'$set': {'completed': datetime.now()}})
+        result = self.db.thread.update({"id": id}, {'$set': {'completed': datetime.utcnow()}})
 
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
@@ -123,16 +123,16 @@ class Database:
         nr = self.db.thread.find({'processing_start': {'$exists': False}}).count()
         ret = self.db.thread.find({'processing_start': {'$exists': False}}).limit(-1).skip(randint(0, nr-1)).next()
 
-        dt = datetime.now()
-        print("datetime", datetime.now())
+        dt = datetime.utcnow()
+        print("datetime", dt)
         # Set used
-        self.db.thread.update({"id": id}, {'$set': {'processing_start': datetime.now()}})
+        self.db.thread.update({"id": id}, {'$set': {'processingstart': dt}})
         return ret
 
     ## Posts
     def add_post(self,id,data):
         result = self.db.post.update({"id": id}, data, True)
-        result = self.db.post.update({"id": id}, {'$set': {'inserted': datetime.now()}})
+        result = self.db.post.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
 
     #### Users management
 
@@ -150,7 +150,7 @@ class Database:
 
     def add_user(self,id,data):
         result = self.db.user.update({"id": id}, data, True)
-        result = self.db.user.update({"id": id}, {'$set': {'inserted': datetime.now()}})
+        result = self.db.user.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
 
     def add_friends(self,user_id1,user_id2):
         data = {"id1": user_id1,"id1": user_id2}
