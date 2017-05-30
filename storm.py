@@ -126,7 +126,7 @@ def main():
         print_instructions()
         exit()
 
-    command = sys.argv[1].strip
+    command = sys.argv[1].strip()
     global db
     db = database.Database("stormfront")
 
@@ -180,7 +180,7 @@ def main():
             print_instructions()
             exit()
 
-        db.add_proxy(sys.argv[2])
+        db.push_proxy(sys.argv[2])
 
     elif command == "--add-login":
         if len(sys.argv) != 4:

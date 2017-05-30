@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4adc07b6-7cad-4f04-bcff-295c5e0807b7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database.py" afterPath="$PROJECT_DIR$/database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fetcher.py" afterPath="$PROJECT_DIR$/fetcher.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm.py" afterPath="$PROJECT_DIR$/storm.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,8 +21,8 @@
       <file leaf-file-name="storm.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/storm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="182" column="31" lean-forward="false" selection-start-line="182" selection-start-column="31" selection-end-line="182" selection-end-column="31" />
+            <state relative-caret-position="1094">
+              <caret line="182" column="23" lean-forward="false" selection-start-line="182" selection-start-column="23" selection-end-line="182" selection-end-column="23" />
               <folding>
                 <element signature="e#34#44#0" expanded="true" />
               </folding>
@@ -46,8 +45,8 @@
       <file leaf-file-name="database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="22" column="6" lean-forward="false" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
+            <state relative-caret-position="383">
+              <caret line="51" column="0" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -94,6 +93,8 @@
       <find>print(</find>
       <find>add-proxy</find>
       <find>--add</find>
+      <find>proxy</find>
+      <find>add_pro</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -102,8 +103,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/database.py" />
         <option value="$PROJECT_DIR$/fetcher.py" />
+        <option value="$PROJECT_DIR$/database.py" />
         <option value="$PROJECT_DIR$/storm.py" />
       </list>
     </option>
@@ -398,16 +399,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="22" column="6" lean-forward="false" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="498">
@@ -418,10 +409,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="51" column="0" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/storm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="182" column="31" lean-forward="false" selection-start-line="182" selection-start-column="31" selection-end-line="182" selection-end-column="31" />
+        <state relative-caret-position="1094">
+          <caret line="182" column="23" lean-forward="false" selection-start-line="182" selection-start-column="23" selection-end-line="182" selection-end-column="23" />
           <folding>
             <element signature="e#34#44#0" expanded="true" />
           </folding>
