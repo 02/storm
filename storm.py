@@ -127,7 +127,7 @@ def main():
     global db
     db = database.Database("stormfront")
 
-    db.set_logins_not_used()
+    db.set_all_logins_not_used()
 
 
    # print(command,sys.argv[2].strip())
