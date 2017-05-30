@@ -34,9 +34,9 @@ def fetch_all_users():
         #sleep a bit
 
     login = db.pop_login()
-    fetcher = fetcher.Fetcher(login['username'],login['password'],login['proxy'])
+    fetch = fetcher.Fetcher(login['username'],login['password'],login['proxy'])
 
-    fetcher.login()
+    fetch.login()
 
     while(True):
         thread = db.pop_thread()
@@ -45,7 +45,7 @@ def fetch_all_users():
         page = 1
         has_more_pages = True
         while has_more_pages:
-            has_more_pages = fetcher.fetch_thread_page(id, page)
+            has_more_pages = fetch.fetch_thread_page(id, page)
             page += 1
             short_pause()
 
