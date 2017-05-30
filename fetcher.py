@@ -4,10 +4,24 @@ from lxml import etree
 import pprint
 import requests
 import datetime
+import hashlib
+
 
 class Fetcher:
 
-    cookies = None
+    def __init__(self, username, password, proxy,timeout=120):
+        self.cookies = None
+        self.username = username
+        self.password = password
+        self.timeout = timeout
+
+        if proxy is not None:
+            self.proxy = {
+                'http': proxy,
+            }
+        else:
+            self.proxy = None
+
 
     def login(self):
         headers = {
@@ -29,25 +43,27 @@ class Fetcher:
             ('do', 'login'),
         )
 
+        hashedpass = hashlib.md5(self.password)
+
         data = [
-            ('vb_login_username', 'wickedness'),
+            ('vb_login_username', self.username),
             ('vb_login_password', ''),
             ('s', ''),
             #('securitytoken', '1493064359-73f4ce2367aaca04b9fd76e322c94ec4655866ec'),
             ('securitytoken', 'guest'),
             ('do', 'login'),
-            ('vb_login_md5password', '201a1dc5ec221cd166dc74894600a9c9'),
-            ('vb_login_md5password_utf', '201a1dc5ec221cd166dc74894600a9c9'),
+            ('vb_login_md5password', hashedpass),#
+            ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
 
-        res = requests.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data)
+        res = requests.post('https://www.stormfront.org/forum/login.php', headers=headers, params=params, data=data, timeout=self.timeout)
         cookie = res.cookies
 
         self.cookies = cookie
         #return cookie
 
 
-    def get_user_friendlist(self, userid, cookie):
+    def get_user_friendlist(self, userid):
         headers = {
             'pragma': 'no-cache',
             'accept-encoding': 'gzip, deflate, sdch, br',
@@ -69,7 +85,7 @@ class Fetcher:
         )
 
         r = requests.get('https://www.stormfront.org/forum/member.php',
-                         headers=headers, params=params, cookies=cookie)
+                         headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
@@ -78,7 +94,7 @@ class Fetcher:
         print('bp')
         #SAVE TO DATABASE
 
-    def get_user_info(self, userid, cookie):
+    def get_user_info(self, userid):
         headers = {
             'pragma': 'no-cache',
             'accept-encoding': 'gzip, deflate, sdch, br',
@@ -97,7 +113,7 @@ class Fetcher:
         )
 
         r = requests.get('https://www.stormfront.org/forum/member.php',
-                         headers=headers, params=params, cookies=cookie)
+                         headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
 
         tree = html.fromstring(r.content)
 
@@ -114,7 +130,11 @@ class Fetcher:
 
 
 
-    def fetch_thread_page(self, cookies,tid,page):
+    def fetch_thread_page(self,tid,page,db):
+
+        ############ TODO: If page == 1 we should also fetch thread info from page and set that in database!
+
+
         headers = {
             'pragma': 'no-cache',
             'accept-encoding': 'gzip, deflate, sdch, br',
@@ -130,7 +150,7 @@ class Fetcher:
         params = (
         )
         r = requests.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
-                         headers=headers, params=params, cookies=cookies)
+                         headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
         tree = html.fromstring(r.content)
 
         #Does thread exist?

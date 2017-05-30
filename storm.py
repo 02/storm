@@ -1,31 +1,26 @@
-
-
-from multiprocessing import Pool
+#from multiprocessing import Pool
 import sys
 import database
 import os
+import database
+import fetcher
+import random
+import time
 
 db = None
-fetcher = None
 
+short_pause_min = 5
+short_pause_max = 10
+long_pause_min = 30
+long_pause_max = 60
 
-def populate_database_with_thread_interval(fromid,toid):
-    #Add to thread database all number between fromid to toid.
-    db.populate_threads_to_be_fetched(fromid,toid)
+def short_pause():
+    time.sleep(random.randint(short_pause_min,short_pause_max))
 
-def populate_database_with_user_interval(fromid, toid):
-    # Add to user database all number between fromid to toid.
-    db.populate_users_to_be_fetched(fromid, toid)
+def long_pause():
+    time.sleep(random.randint(long_pause_min,long_pause_max))
 
-def fetch_random_thread():
-    #Get random unprocessed thread from database
-    return db.pop_thread()
-
-def fetch_random_user():
-    return db.pop_user()
-
-
-def fetch_users():
+def fetch_all_users():
     #Repeat:
         # Login
         #Repeat:
@@ -36,8 +31,27 @@ def fetch_users():
             # If logged out, quit loop
         #sleep a bit
 
+    login = db.pop_login()
+    fetcher = Fetcher(login['username'],login['password'],login['proxy'])
 
-def fetch_thread():
+    fetcher.login()
+
+    while(True):
+        thread = db.pop_thread()
+        id = thread['id']
+
+        page = 1
+        has_more_pages = True
+        while has_more_pages:
+            has_more_pages = fetcher.fetch_thread_page(id, page)
+            page += 1
+            short_pause()
+
+        db.thread_completed(id)
+
+
+
+def fetch_all_threads():
     # Repeat:
         # Login
         # Repeat:
@@ -47,13 +61,16 @@ def fetch_thread():
         #sleep a bit
 
 
+
+
 def get_random_proxy():
 # call db.get_random_proxy_and_mark_used()
 # return proxy
 # if return null, throw error
 
-def set_proxy_down(ip):
-    db.
+def set_proxy_down_get_new_one(ip):
+    db.set_proxy_down(ip)
+
 
 # db.set_proxy_down(ip)
 
@@ -101,8 +118,6 @@ def query_yes_no(question, default="yes"):
 def populate_user_database(fromnr,tonr):
     db.populate_threads_to_be_fetched(fromnr,tonr)
 
-def fetch_all_users():
-
 
 
 def print_instructions():
@@ -116,10 +131,13 @@ def print_instructions():
 
     print("--add-proxy <IP> \t\t\t Add proxy to proxy list.")
     print("--add-login <username> <password> \t\t\t Add new user to login list.")
-    print("--monitor-new-posts \t\t\t Continuously scrape new posts.")
-    print("--monitor-new-users \t\t\t Continuously scrape new users.")
+    print("--monitor-new-posts \t\t\t Continuously scrape new posts. NOT YET IMPLEMENTED.")
+    print("--monitor-new-users \t\t\t Continuously scrape new users. NOT YET IMPLEMENTED.")
+
 
 def main():
+    print "Starting up!"
+
 
     if len(sys.argv) < 2:
         print("Please provide arguments.")
@@ -159,7 +177,11 @@ def main():
             exit()
 
         print("Populating thread database...")
-        populate_thread_database(int(sys.argv[3]), int(sys.argv[4]))
+
+        # Add to thread database all number between fromid to toid.
+        db.populate_threads_to_be_fetched(int(sys.argv[3]), int(sys.argv[4]))
+
+
         fetch_all_threads()
 
     elif sys.argv[2].strip() == "--continue-get-users":
@@ -174,13 +196,19 @@ def main():
             print_instructions()
             exit()
 
-        add_proxy(sys.argv[3])
+        db.add_proxy(sys.argv[3])
 
-#TODO
-    print("--add-login <username> <password> \t\t\t Add new user to login list.")
+    elif sys.argv[2].strip() == "--add-login":
+        if len(sys.argv) != 4:
+            print_instructions()
+            exit()
+
+        db.add_login(sys.argv[3],sys.argv[4])
+
+
+    #TODO later
     #print("--monitor-new-posts \t\t\t Continuously scrape new posts.")
-    print("--monitor-new-users \t\t\t Continuously scrape new users.")
-
+    #print("--monitor-new-users \t\t\t Continuously scrape new users.")
 
 
     else:
@@ -189,10 +217,10 @@ def main():
 
 
 
-    cookie = login()
+    #cookie = login()
     #get_user_friendlist(1, cookie)
     #get_user_info(336591, cookie)
-    fetch_thread_page(cookie, 1208742, 1) #1208742
+    #fetch_thread_page(cookie, 1208742, 1) #1208742
 
     #there are 242542 users, 340190 ids
     #2 fetch per user. 700,000 fetches.

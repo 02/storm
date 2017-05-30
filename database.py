@@ -7,83 +7,136 @@ from random import randint
 import time
 
 
+
+
 class Database:
     def __init__(self, dbname):
         print("Connecting to database")
         self.client = MongoClient()
         self.db = self.client[dbname]
 
+    ## LOGIN AND PROXY MANAGEMENT
 
-    def upsert_user(self, id, data):
-        result = self.db.users.update({"id": id}, data, True)
+    ### DATABASE STRUCTURE: ####
+    # Proxy:
+    ## ip: string <#key>
+    ## broken: None or timestamp
+    ## used: None or timestamp
+
+    # Login:
+    # username: string <#key>
+    # password: string
+    # used: True/False
+    # proxy: string  ##ip to current proxy used
+
+    #### FUNCTIONS: ###
+    # get_login():
+    # Take a random unused login. If it doesn't have an IP to it, assign_user_a_random_unused_proxy(userid)
+
+    # assign_user_a_random_unused_proxy(userid)
+    # Take a random unused proxy. Set as proxy for userid. Return.
+
+    # proxy_down(proxyid,username):
+    # set broken: True for proxy.
+    # assign_user_a_random_unused_proxy()
+    # return new proxy
+
+    def push_login(self, username, data):
+        result = self.db.login.update({"username": username}, data, True)
 
         #if result['updatedExisting']:
          #   print('User already existed. Updated.')
 
-    def upsert_thread(self,id,data):
-        result = self.db.threads.update({"id": id}, data, True)
+    def set_login_not_used(self,username):
+        self.db.login.update({"username": username}, {'$set', {'used', None}})
 
-    def upsert_post(self,id,data):
-        result = self.db.posts.update({"id": id}, data, True)
+    def pop_login(self):
+        nr = self.db.login.find().count()
+        randomNr = randint(1, nr)
+        ret = self.db.login.find({'used': None, 'broken': None}).limit(-1).skip(randomNr).next()
 
-    def get_random_proxy_and_mark_used(self):
+        username = ret['username']
+
+        # Set used
+        self.db.login.update({"username": username}, {'$set', {'used', '#currentTimestamp'}})
+
+        if ret['proxy'] is None:
+            ret['proxy'] = self.assign_user_a_random_unused_proxy(username)
+
+        return ret
+
+    def assign_login_a_random_unused_proxy(self,username):
         nrproxies = self.db.proxy.find().count()
         randomNr = randint(1,nrproxies)
-        ret = self.db.proxy.find({'used': False, 'broken': False}).limit(-1).skip(randomNr).next()
+        ret = self.db.proxy.find({'used': None, 'broken': None}).limit(-1).skip(randomNr).next()
+
+        ip = ret['ip']
 
         #Set used
-        self.db.proxy.update({"id": id}, {'$set',{'used',True}})
+        self.db.proxy.update({"ip": ip}, {'$set',{'used','$currentTimestamp'}})
 
+        #Assign to user
+        self.db.login.update({"username": username}, {'$set', {'proxy', ip}})
 
-    def set_proxy_down(self,proxyip,user_id):
-        self.db.proxy.update({"id": id}, {'$set', {'broken', True}})
+        return ip
 
-        proxy = pop_proxy()
-        self.db.proxy.update({"id": id}, {'$set', {'broken', True}})
-        #TODO: Get a new proxy for the associated user.
+    def set_proxy_down(self,ip,username):
+        self.db.proxy.update({"ip": ip}, {'$set', {'broken', '$currentTimestamp'}})
+        return self.assign_user_a_random_unused_proxy(username)
 
+    ######### Thread management
+    #Data structure
+    #Thread:
+    # id
+    # title
+    # parent_id
+    # processed: None or timestamp
 
-    def get_random_login_and_mark_used(self):
-        nr = self.db.login.find().count()
-        randomNr = randint(1,nr)
-        ret = self.db.login.find({'used': False, 'broken': False}).limit(-1).skip(randomNr).next()
+    def add_thread(self,id,data):
+        result = self.db.thread.update({"id": id}, data, True)
+        result = self.db.thread.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
 
-        #Set used
-        self.db.login.update({"id": id}, {'$set',{'used',True}})
-
-        #TODO: If the login doesnt have a proxy, get a random unused proxy and
-        # attach to it. Goal: We dont want to connect to all users from all proxies, but
-        # always connect each user to a unique proxy.
-
+    def thread_completed(self,id):
+        result = self.db.thread.update({"id": id}, {'$set', {'completed', '$currentTimestamp'}})
 
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
         for i in range(fromnr,tonr):
             self.db.thread.update({'id': i},{'id': i},True)
 
-
     def pop_thread(self):
-        nr = self.db.login.find().count()
+        nr = self.db.thread.find({'processing_start', {'$exists': False}}).count()
         randomNr = randint(1, nr)
-        ret = self.db.login.find().limit(-1).skip(randomNr).next()
+        ret = self.db.thread.find({'processing_start', {'$exists': False}}).limit(-1).skip(randomNr).next()
 
         # Set used
-        self.db.login.update({"id": id}, {'$set', {'used', True}})
+        self.db.thread.update({"id": id}, {'$set', {'processing_start', '$currentTimestamp'}})
         return ret
 
-    def pop_proxy(self):
-        ret = self.db.proxy.find_one({"broken": {"$ne": True}, "used": {"$ne": True} })
-        return ret
+## Posts
 
-    def pop_login(self):
-        ret = self.db.login.find_one({"used": {"$ne": True}})
-        #If it doesnt have a proxy attached, fetch one
+     def add_post(self,id,data):
+        result = self.db.post.update({"id": id}, data, True)
+        result = self.db.post.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
 
-        
+    #### Users management
 
+    ## Friends:
+    # id1
+    # id2
 
+    # User:
+    # id,username,inserted, ..
 
     def populate_users_to_be_fetched(self, fromnr, tonr):
         # Add all
         for i in range(fromnr, tonr):
-            self.db.users.update({'id': i}, {'id': i}, True)
+            self.db.user.update({'id': i}, {'id': i}, True)
+
+    def add_user(self,id,data):
+        result = self.db.user.update({"id": id}, data, True)
+        result = self.db.user.update({"id": id}, {'$set', {'inserted', '$currentTimestamp'}})
+
+    def add_friends(self,user_id1,user_id2):
+        data = {"id1": user_id1,"id1": user_id2}
+        result = self.db.user.update(data, data, True)
