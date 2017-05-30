@@ -123,10 +123,10 @@ class Database:
         nr = self.db.thread.find({'processing_start': {'$exists': False}}).count()
         ret = self.db.thread.find({'processing_start': {'$exists': False}}).limit(-1).skip(randint(0, nr-1)).next()
 
-        dt = datetime.utcnow()
-        print("datetime", dt)
+        tid = ret['id']
+
         # Set used
-        self.db.thread.update({"id": id}, {'$set': {'processingstart': dt}})
+        self.db.thread.update({"id": tid}, {'$set': {'processingstart': datetime.utcnow()}})
         return ret
 
     ## Posts
