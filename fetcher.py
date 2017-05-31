@@ -140,8 +140,8 @@ class Fetcher:
 
         r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
 
-        print(r.url)
-        print(r.content)
+        #print(r.url)
+        #print(r.content)
 
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
@@ -184,7 +184,7 @@ class Fetcher:
 
         if len(names) == 0:
             print("WARNING: Failed getting user id %s" % userid)
-            db.set_user_failed(self,userid)
+            db.set_user_failed(userid)
         else:
             name = names[0]
 

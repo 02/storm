@@ -26,7 +26,7 @@ def fetch_all_users():
 
     login = db.pop_login()
     fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
-    fetch.login()
+    fetch.login(db)
 
     print("Beginning user download...")
     user_id = db.pop_user()
