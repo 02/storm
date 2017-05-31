@@ -106,6 +106,7 @@ class Fetcher:
 
 
                 success = True
+                return res
 
             except requests.exceptions.RequestException:
                 eprint("WARNING: Post failed. Trying ping...")
