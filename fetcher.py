@@ -350,7 +350,8 @@ class Fetcher:
                         'title': title, 'hasquote': hasquote, 'quoteofpostid': quoteofpostid, 'quoteofusername': quoteofusername,
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
-            db.add_post(messageid, data)
+                pprint.pprint(data)
+                db.add_post(messageid, data)
 
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0
