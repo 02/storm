@@ -36,7 +36,7 @@ class Fetcher:
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
-        cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org",proxies = self.proxies)
+        cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org",proxies = self.proxy)
 
         #self.cookies = cookie_value
 
@@ -78,7 +78,7 @@ class Fetcher:
             ('vb_login_md5password', hashedpass),#
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
-        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout, proxies = self.proxies)
+        res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout, proxies = self.proxy)
 
         self.cookies = res.cookies
         requests.utils.add_dict_to_cookiejar(self.cookies, cf_cookie)
@@ -111,7 +111,7 @@ class Fetcher:
             'page': '1',
         }
 
-        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxies)
+        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
 
         print(r.url)
         print(r.content)
@@ -149,7 +149,7 @@ class Fetcher:
 
         params = {'u': userid}
 
-        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxies)
+        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxy)
 
         tree = html.fromstring(r.content)
 
