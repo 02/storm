@@ -60,7 +60,7 @@ def fetch_all_threads():
         page = 1
         has_more_pages = True
         while has_more_pages:
-            print("# Scraping thread %s, page %s... " % thread_id, page)
+            print("# Scraping thread %s, page %s... " % (thread_id, page))
             has_more_pages = fetch.fetch_thread_page(thread_id,page,db)
             page += 1
             short_pause()
@@ -189,7 +189,7 @@ def main():
 
         db.populate_users_to_be_fetched(int(sys.argv[2]),int(sys.argv[3]))
 
-        
+
         fetch_all_users()
 
 

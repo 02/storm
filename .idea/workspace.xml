@@ -17,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="storm.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="storm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/storm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="191" column="8" lean-forward="false" selection-start-line="191" selection-start-column="8" selection-end-line="191" selection-end-column="8" />
+            <state relative-caret-position="179">
+              <caret line="35" column="38" lean-forward="false" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="38" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -29,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4628">
-              <caret line="356" column="23" lean-forward="false" selection-start-line="356" selection-start-column="23" selection-end-line="359" selection-end-column="23" />
+            <state relative-caret-position="179">
+              <caret line="89" column="45" lean-forward="false" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="45" />
               <folding>
                 <element signature="e#1#14#0" expanded="true" />
               </folding>
@@ -64,8 +64,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>datetime.now</find>
-      <find>fe</find>
       <find>fetch_thread</find>
       <find>completed</find>
       <find>bp</find>
@@ -94,6 +92,8 @@
       <find>parse</find>
       <find>trim(</find>
       <find>thread</find>
+      <find>scraping thr</find>
+      <find>%</find>
     </findStrings>
     <replaceStrings>
       <replace>datetime.now()</replace>
@@ -448,22 +448,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fetcher.py">
+    <entry file="file://$PROJECT_DIR$/storm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4628">
-          <caret line="356" column="23" lean-forward="false" selection-start-line="356" selection-start-column="23" selection-end-line="359" selection-end-column="23" />
+        <state relative-caret-position="179">
+          <caret line="35" column="38" lean-forward="false" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="38" />
           <folding>
-            <element signature="e#1#14#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm.py">
+    <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="191" column="8" lean-forward="false" selection-start-line="191" selection-start-column="8" selection-end-line="191" selection-end-column="8" />
+        <state relative-caret-position="179">
+          <caret line="89" column="45" lean-forward="false" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="45" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#1#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
