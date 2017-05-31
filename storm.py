@@ -1,4 +1,4 @@
-#from multiprocessing import Pool
+from multiprocessing import Pool
 import sys
 import os
 import random
@@ -9,15 +9,17 @@ import database
 import fetcher
 
 
-db = None
-
 short_pause_min = 5
 short_pause_max = 10
 long_pause_min = 30
 long_pause_max = 60
 
+db = None
+
+
 def short_pause():
     time.sleep(random.randint(short_pause_min,short_pause_max))
+
 
 def long_pause():
     time.sleep(random.randint(long_pause_min,long_pause_max))
@@ -178,7 +180,6 @@ def main():
         else:
             print("Leaving database intact.")
 
-
     elif command == "--start-get-users":
         if len(sys.argv) != 4:
             print_instructions()
@@ -187,6 +188,8 @@ def main():
         print("Populating user database...")
 
         db.populate_users_to_be_fetched(int(sys.argv[2]),int(sys.argv[3]))
+
+        
         fetch_all_users()
 
 
