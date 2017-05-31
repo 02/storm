@@ -4,6 +4,8 @@ import requests
 import cfscrape
 import datetime
 import hashlib
+import time
+import random
 
 from platform import system as system_name # Returns the system/OS name
 from os import system as system_call       # Execute a shell command
@@ -11,6 +13,12 @@ from os import system as system_call       # Execute a shell command
 
 from lxml import html
 from lxml import etree
+
+from __future__ import print_function
+import sys
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 
 class Fetcher:
@@ -55,14 +63,63 @@ class Fetcher:
         return system_call("ping " + parameters + " " + host) == 0
 
 
-    def post(self,url,**kwargs):
-        print("TO BE IMPLEMENTED")
-        #Try posting, if it fails, try to ping stormfront.org
+    def post(self,db,url,**kwargs):
+        # Try posting, if it fails, try to ping stormfront.org
         # If successful, it's probably the proxy that's the problem. Change proxy and try again.
         # If failed, its the internet or stormfront. Wait for X minutes then try again.
         # If result returned, check whether we have been logged out.
         # If we have been logged out, call login(). Then try again. If same fail again, user has been blocked: give up().
         # self.scraper.post(url,**kwargs)
+
+        attempts_error_status_code = 20
+        attempts_logged_out = 10
+
+        success = False
+        while not success:
+
+            try:
+                res = self.scraper.post(url, **kwargs)
+
+                if 400 <= res.status_code < 600:
+                    eprint("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
+                    if attempts_error_status_code > 0:
+                        eprint("Trying to solve by logging in.")
+                        self.login(db)
+                        attempts_error_status_code -= 1
+                        continue
+                    else:
+                        eprint("Already tried all attempts. Giving up.")
+                        raise Exception("Got status error too many times. Giving up. %s, reason: %s."  % (res.status_code, res.reason))
+
+
+                if len(html.fromstring(res.content).xpath("//input[@value='guest']")) > 0 or len(
+                    html.fromstring(res.content).xpath("//input[@value='Log in']")) > 0:
+                    eprint("WARNING: No longer seem to be logged in.")
+
+                    if attempts_logged_out > 0:
+                        eprint("Trying to solve by logging in...")
+                        self.login(db)
+                        attempts_logged_out -= 1
+                        continue
+                    else:
+                        eprint("Already tried all attempts. Giving up.")
+                        raise Exception("Got logged out too many times. Giving up.")
+
+
+                success = True
+
+            except requests.exceptions.RequestException:
+                eprint("WARNING: Post failed. Trying ping...")
+
+                if self.ping("www.stormfront.org"):
+                    #Ping without using proxy. If works, it is probably the proxy that's fucked. Change proxy.
+                    eprint("Got response from ping. Probably proxy that's down. Trying another.")
+                    self.try_another_proxy(db)
+                else:
+                    #No ping, probably internet or SF that's down. Long rest then try again!
+                    eprint("No reponse. Probably SF or internet that's down. Resting and then trying again.")
+                    time.sleep(random.randint(60,240))
+
 
 
     def login(self,db):
@@ -123,6 +180,7 @@ class Fetcher:
             ('vb_login_md5password_utf', hashedpass),### hashlib.md5(self.password) ?????????
         ]
         res = self.scraper.post('https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout, proxies = self.proxy)
+        #res = self.post(db,'https://www.stormfront.org/forum/login.php', headers=self.headers, cookies=cf_cookie, params=params, data=data, timeout=self.timeout, proxies = self.proxy)
 
         self.cookies = res.cookies
         requests.utils.add_dict_to_cookiejar(self.cookies, cf_cookie)
@@ -132,22 +190,7 @@ class Fetcher:
         res.raise_for_status()
 
 
-
-
     def get_user_friendlist(self, userid, db):
-        # headers = {
-        #     'pragma': 'no-cache',
-        #     'accept-encoding': 'gzip, deflate, sdch, br',
-        #     'accept-language': 'en-US,en;q=0.8',
-        #     'upgrade-insecure-requests': '1',
-        #     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-        #     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        #     'cache-control': 'no-cache',
-        #     'authority': 'www.stormfront.org',
-        #     #  'cookie': cookie, #'gsScrollPos=;__cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C;bb2lastvisit=1493064370; bb2lastactivity=0; bb2sessionhash=a3ef28efe4019980f3c84ed019b33386',
-        #     'referer': 'https://www.stormfront.org/forum/login.php?do=login',
-        # }
-
         params = {
             'tab': 'friends',
             'u': userid,
@@ -155,18 +198,12 @@ class Fetcher:
             'page': '1',
         }
 
-        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
-
-        #print(r.url)
-        #print(r.content)
+        #r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
+        r = self.post(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
 
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
         with_ids = [name.attrib['href'].split("=")[1] for name in names]
-
-
-
-        #SAVE TO DATABASE
 
         db.add_friends(userid,with_ids)
 
@@ -178,23 +215,10 @@ class Fetcher:
         return ' '.join(string.split())
 
     def get_user_info(self, userid,db):
-        # headers = {
-        #     'pragma': 'no-cache',
-        #     'accept-encoding': 'gzip, deflate, sdch, br',
-        #     'accept-language': 'en-US,en;q=0.8',
-        #     'upgrade-insecure-requests': '1',
-        #     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-        #     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        #     'cache-control': 'no-cache',
-        #     'authority': 'www.stormfront.org',
-        #     #  'cookie': cookie, #'gsScrollPos=;__cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C;bb2lastvisit=1493064370; bb2lastactivity=0; bb2sessionhash=a3ef28efe4019980f3c84ed019b33386',
-        #     'referer': 'https://www.stormfront.org/forum/login.php?do=login',
-        # }
-
         params = {'u': userid}
-
-        r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxy)
-
+        #r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxy)
+        r = self.post(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,
+                             cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
         tree = html.fromstring(r.content)
 
         names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
@@ -268,7 +292,9 @@ class Fetcher:
         }
         params = (
         )
-        r = self.scraper.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
+        #r = self.scraper.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
+        #                 headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
+        r = self.post(db,"https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
                          headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
         tree = html.fromstring(r.content)
 
@@ -284,11 +310,9 @@ class Fetcher:
 
             #First page! Create thread and forums
             if page == 1:
-                print("This is first page of thread. Will add thread and forum info to db! use first post date.")
                 forums = tree.xpath("//span[@class='navbar']/a")
 
                 # create forums
-                print("TODO TODO TODO!")
                 parentid = None
                 for fi in range(1, len(forums)):
                     forumid = forums[fi].attrib["href"].split("/forum/f")[1][:-1]
@@ -326,9 +350,6 @@ class Fetcher:
                 signature = " ".join(message.xpath(".//div[@class='hidesig']//text()")).strip()
                 title = message.xpath(".//td[@class='alt1']/div/strong/text()")[0]
 
-                #postdate = message.xpath(".//a[starts-with(@name,'post')]/text")[0].strip()
-                print(datestr)
-
 
                 quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
                 hasquote = False
@@ -340,9 +361,6 @@ class Fetcher:
                     quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0])
                     quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
 
-                print(i, messageid, authorid, dateparse, fullmessagehtml, cleanmessage, signature, title)
-                if hasquote:
-                    print(quoteofusername, quoteofpostid, quotehtml, quotetxt)
 
                 #ADD TO DATABASE
                 data = {'id': messageid, 'authorid': authorid, 'posteddate': dateparse,

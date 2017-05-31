@@ -20,8 +20,8 @@
       <file leaf-file-name="storm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/storm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="263">
-              <caret line="146" column="7" lean-forward="false" selection-start-line="146" selection-start-column="7" selection-end-line="146" selection-end-column="7" />
+            <state relative-caret-position="271">
+              <caret line="24" column="61" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="61" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -32,10 +32,22 @@
       <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="590">
-              <caret line="352" column="17" lean-forward="false" selection-start-line="352" selection-start-column="17" selection-end-line="352" selection-end-column="17" />
+            <state relative-caret-position="235">
+              <caret line="200" column="25" lean-forward="false" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="25" />
               <folding>
                 <element signature="e#1#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/requests/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="869" column="8" lean-forward="false" selection-start-line="869" selection-start-column="8" selection-end-line="869" selection-end-column="8" />
+              <folding>
+                <element signature="e#129#147#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,13 +76,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>bp</find>
-      <find>requests</find>
-      <find>login</find>
-      <find>get_user_friendlist</find>
-      <find>add_friends</find>
-      <find>cookie_value</find>
-      <find>get_user</find>
       <find>adduser</find>
       <find>proxy</find>
       <find>pop_user</find>
@@ -81,7 +86,6 @@
       <find>proxy_down</find>
       <find>set_proxy</find>
       <find>fetch_all_user</find>
-      <find>print</find>
       <find>set_user_failed</find>
       <find>set_user</find>
       <find>dateparse</find>
@@ -94,6 +98,14 @@
       <find>pop_thread</find>
       <find>no such t</find>
       <find>add_post</find>
+      <find>todo</find>
+      <find>print</find>
+      <find>httperror</find>
+      <find>http</find>
+      <find>.json</find>
+      <find>jspn</find>
+      <find>self.post</find>
+      <find>self.scraper</find>
     </findStrings>
     <replaceStrings>
       <replace>datetime.now()</replace>
@@ -438,16 +450,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="146" column="7" lean-forward="false" selection-start-line="146" selection-start-column="7" selection-end-line="146" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="409">
@@ -458,10 +460,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/storm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="24" column="61" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/requests/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="869" column="8" lean-forward="false" selection-start-line="869" selection-start-column="8" selection-end-line="869" selection-end-column="8" />
+          <folding>
+            <element signature="e#129#147#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="590">
-          <caret line="352" column="17" lean-forward="false" selection-start-line="352" selection-start-column="17" selection-end-line="352" selection-end-column="17" />
+        <state relative-caret-position="235">
+          <caret line="200" column="25" lean-forward="false" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="25" />
           <folding>
             <element signature="e#1#14#0" expanded="true" />
           </folding>
