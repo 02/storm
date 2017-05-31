@@ -61,7 +61,7 @@ def fetch_all_threads():
         has_more_pages = True
         while has_more_pages:
             print("# Scraping thread %s, page %s... " % (thread_id, page))
-            has_more_pages = fetch.fetch_thread_page(thread_id,page,db)
+            has_more_pages = fetch.fetch_thread_page(thread_id, page, db)
             page += 1
             short_pause()
 

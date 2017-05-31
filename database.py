@@ -111,29 +111,35 @@ class Database:
     # processed: None or timestamp
 
     def add_thread(self,tid,data):
+        data['inserted'] = datetime.utcnow()
+        data['status'] = 2
         result = self.db.thread.update({"id": tid}, data, True)
-        result = self.db.thread.update({"id": tid}, {'$set': {'inserted': datetime.utcnow()}})
+
 
     def thread_completed(self,tid):
-        result = self.db.thread.update({"id": tid}, {'$set': {'completed': datetime.utcnow()}})
+        result = self.db.thread.update({"id": tid}, {'$set': {'status': 2, 'completed': datetime.utcnow()}})
+
+    def thread_failed(self,tid):
+        result = self.db.thread.update({"id": tid}, {'$set': {'status': -1, 'completed': datetime.utcnow()}})
 
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
         for i in range(fromnr,tonr):
-            self.db.thread.update({'id': i},{'id': i},True)
+            self.db.thread.update({'id': i},{'id': i,'status': 0},True)
 
     def pop_thread(self):
-        nr = self.db.thread.find({'processing_start': {'$exists': False}}).count()
+        nr = self.db.thread.find({'status': 0}).count()
 
         if nr == 0:
             return None
 
-        ret = self.db.thread.find({'processing_start': {'$exists': False}}).limit(-1).skip(randint(0, nr-1)).next()
+        ret = self.db.thread.find({'status': 0}).limit(-1).skip(randint(0, nr-1)).next()
         tid = ret['id']
 
         # Set used
-        self.db.thread.update({"id": tid}, {'$set': {'processingstart': datetime.utcnow()}})
+        self.db.thread.update({"id": tid}, {'$set': {'status': 1, 'processing_start': datetime.utcnow()}})
         return tid
+
 
     ## Posts
     def add_post(self,pid,data):

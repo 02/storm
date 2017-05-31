@@ -276,6 +276,7 @@ class Fetcher:
         if "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).count("No Thread specified.") > 0:
             #thread does not exist
             print("No such thread")
+            db.thread_failed(tid)
             return False
 
         else:
