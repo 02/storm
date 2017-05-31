@@ -221,6 +221,8 @@ class Fetcher:
                              cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
         tree = html.fromstring(r.content)
 
+        print(r.content)
+
         names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
 
         if len(names) == 0:

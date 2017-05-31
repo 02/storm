@@ -32,8 +32,8 @@
       <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="541">
-              <caret line="109" column="0" lean-forward="true" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+            <state relative-caret-position="282">
+              <caret line="223" column="23" lean-forward="false" selection-start-line="223" selection-start-column="23" selection-end-line="223" selection-end-column="23" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -76,7 +76,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>adduser</find>
       <find>proxy</find>
       <find>pop_user</find>
       <find>self.proxies</find>
@@ -106,6 +105,7 @@
       <find>jspn</find>
       <find>self.post</find>
       <find>self.scraper</find>
+      <find>failed getting</find>
     </findStrings>
     <replaceStrings>
       <replace>datetime.now()</replace>
@@ -482,8 +482,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="109" column="0" lean-forward="true" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+        <state relative-caret-position="282">
+          <caret line="223" column="23" lean-forward="false" selection-start-line="223" selection-start-column="23" selection-end-line="223" selection-end-column="23" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
