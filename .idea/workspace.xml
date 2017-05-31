@@ -32,11 +32,9 @@
       <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="200" column="25" lean-forward="false" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="25" />
-              <folding>
-                <element signature="e#1#14#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="169">
+              <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -372,7 +370,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="28" />
+      <option name="time" value="29" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -391,9 +389,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="52">
           <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding>
-            <element signature="e#1#14#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -411,9 +407,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding>
-            <element signature="e#1#14#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -482,11 +476,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="200" column="25" lean-forward="false" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="25" />
-          <folding>
-            <element signature="e#1#14#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="169">
+          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

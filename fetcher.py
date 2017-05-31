@@ -1,3 +1,5 @@
+from __future__ import print_function
+import sys
 
 import pprint
 import requests
@@ -10,12 +12,9 @@ import random
 from platform import system as system_name # Returns the system/OS name
 from os import system as system_call       # Execute a shell command
 
-
 from lxml import html
 from lxml import etree
 
-from __future__ import print_function
-import sys
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
