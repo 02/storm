@@ -68,7 +68,10 @@ class Database:
 
     def pop_login(self):
         nr = self.db.login.find().count()
-        print('nr users',nr)
+
+        if nr == 0:
+            return None
+
         ret = self.db.login.find({'used': None, 'broken': None}).limit(-1).skip(randint(0, nr-1)).next()
 
         username = ret['username']
@@ -95,7 +98,7 @@ class Database:
 
         return ip
 
-    def set_proxy_down(self,ip,username):
+    def set_proxy_down_assign_new(self,ip,username):
         self.db.proxy.update({"ip": ip}, {'$set': {'broken': datetime.utcnow()}})
         return self.assign_login_a_random_unused_proxy(username)
 
@@ -121,8 +124,11 @@ class Database:
 
     def pop_thread(self):
         nr = self.db.thread.find({'processing_start': {'$exists': False}}).count()
-        ret = self.db.thread.find({'processing_start': {'$exists': False}}).limit(-1).skip(randint(0, nr-1)).next()
 
+        if nr == 0:
+            return None
+
+        ret = self.db.thread.find({'processing_start': {'$exists': False}}).limit(-1).skip(randint(0, nr-1)).next()
         tid = ret['id']
 
         # Set used
@@ -147,13 +153,13 @@ class Database:
 
     def pop_user(self):
         nr = self.db.user.find({'status': 0}).count()
+        if nr == 0:
+            return None
+
         ret = self.db.user.find({'status': 0}).limit(-1).skip(randint(0, nr - 1)).next()
 
-        if ret is not None:
-            self.set_user_processing(ret['id'])
-            return ret['id']
-        else:
-            return None
+        self.set_user_processing(ret['id'])
+        return ret['id']
 
 
 

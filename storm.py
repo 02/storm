@@ -33,8 +33,8 @@ def fetch_all_users():
     while user_id is not None:
         print("Scraping user %s..." % user_id)
 
-        fetch.get_user_friendlist(1, db)
-        fetch.get_user_info(1, db)
+        fetch.get_user_friendlist(user_id, db)
+        fetch.get_user_info(user_id, db)
 
         print("Taking short rest...")
         short_pause()

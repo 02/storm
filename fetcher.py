@@ -20,23 +20,40 @@ class Fetcher:
 
         self.scraper = cfscrape.create_scraper()
 
+        self.set_proxy(proxy)
 
+    def set_proxy(self, proxy):
         if proxy is not None:
             self.proxy = {
-                'https': proxy,
-                'https': proxy,
+                'http': proxy,
+                #'https': proxy,
             }
         else:
             self.proxy = None
 
 
-    def login(self):
+    def try_another_proxy(self,db):
+        new_proxy = db.set_proxy_down_assign_new(self.proxy['http'], self.username)
+        if new_proxy is None:
+            raise Exception("Ran out of proxies! Giving up.")
+
+        self.set_proxy(new_proxy)
+
+
+    def login(self,db):
 
         print("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
-        cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org",proxies = self.proxy)
+        while True:
+            try:
+                cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org",proxies=self.proxy)
+
+            except requests.exceptions.RequestException:
+                # Probably the proxy!
+                self.try_another_proxy(db)
+
 
         #self.cookies = cookie_value
 
