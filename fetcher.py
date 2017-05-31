@@ -345,12 +345,12 @@ class Fetcher:
                     print(quoteofusername, quoteofpostid, quotehtml, quotetxt)
 
                 #ADD TO DATABASE
-                data = {'id': messageid, 'authorid': authorid, 'posteddate': dateparse, 'fullmessage': fullmessage,
+                data = {'id': messageid, 'authorid': authorid, 'posteddate': dateparse,
                         'fullmessagehtml': fullmessagehtml, 'cleanmessage': cleanmessage, 'signature': signature,
                         'title': title, 'hasquote': hasquote, 'quoteofpostid': quoteofpostid, 'quoteofusername': quoteofusername,
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
-                pprint.pprint(data)
+                #pprint.pprint(data)
                 db.add_post(messageid, data)
 
             #Is there a next page?

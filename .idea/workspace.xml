@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4adc07b6-7cad-4f04-bcff-295c5e0807b7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database.py" afterPath="$PROJECT_DIR$/database.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fetcher.py" afterPath="$PROJECT_DIR$/fetcher.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,8 +32,8 @@
       <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="541">
-              <caret line="352" column="35" lean-forward="false" selection-start-line="352" selection-start-column="35" selection-end-line="352" selection-end-column="35" />
+            <state relative-caret-position="590">
+              <caret line="352" column="17" lean-forward="false" selection-start-line="352" selection-start-column="17" selection-end-line="352" selection-end-column="17" />
               <folding>
                 <element signature="e#1#14#0" expanded="true" />
               </folding>
@@ -461,8 +460,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="352" column="35" lean-forward="false" selection-start-line="352" selection-start-column="35" selection-end-line="352" selection-end-column="35" />
+        <state relative-caret-position="590">
+          <caret line="352" column="17" lean-forward="false" selection-start-line="352" selection-start-column="17" selection-end-line="352" selection-end-column="17" />
           <folding>
             <element signature="e#1#14#0" expanded="true" />
           </folding>
