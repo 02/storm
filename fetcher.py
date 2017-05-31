@@ -40,15 +40,25 @@ class Fetcher:
         self.set_proxy(new_proxy)
 
 
+    def post(self):
+        print("TO BE IMPLEMENTED")
+        #Try posting, if it fails, try to ping stormfront.org
+        # If successful, it's probably the proxy that's the problem. Change proxy and try again.
+        # If failed, its the internet or stormfront. Wait for X minutes then try again.
+        # self.scraper.post()
+
+
     def login(self,db):
 
         print("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
-        while True:
+        fail = True
+        while fail:
             try:
                 cf_cookie, user_agent = cfscrape.get_tokens("https://www.stormfront.org",proxies=self.proxy)
+                fail = False
 
             except requests.exceptions.RequestException:
                 # Probably the proxy!
