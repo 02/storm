@@ -185,28 +185,29 @@ class Fetcher:
         if len(names) == 0:
             print("WARNING: Failed getting user id %s" % userid)
             db.set_user_failed(userid)
+            
         else:
             name = names[0]
 
-        ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
-        profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
+            ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
+            profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
-        profiletext = str(etree.tostring(profile))
-        ministattext = str(etree.tostring(ministat))
+            profiletext = str(etree.tostring(profile))
+            ministattext = str(etree.tostring(ministat))
 
-        #Clean out multiple line breaks and whitespaces
-        profiletextonly = Fetcher.clean_text_string(str(etree.tostring(profile, method='text')))
-        ministattextonly = Fetcher.clean_text_string(str(etree.tostring(ministat, method='text')))
+            #Clean out multiple line breaks and whitespaces
+            profiletextonly = Fetcher.clean_text_string(str(etree.tostring(profile, method='text')))
+            ministattextonly = Fetcher.clean_text_string(str(etree.tostring(ministat, method='text')))
 
-        print("name", name)
-        print("ministat", ministat)
-        print("profile", profile)
-        print("ministattext", ministattextonly)
-        print("profiletext", profiletextonly)
+            print("name", name)
+            print("ministat", ministat)
+            print("profile", profile)
+            print("ministattext", ministattextonly)
+            print("profiletext", profiletextonly)
 
-        data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
-                'ministattext': profiletextonly, 'profiletext': ministattextonly}
-        db.add_user(userid,data)
+            data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
+                    'ministattext': profiletextonly, 'profiletext': ministattextonly}
+            db.add_user(userid,data)
 
 
     def fetch_thread_page(self,tid,page,db):
