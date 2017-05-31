@@ -45,7 +45,28 @@ def fetch_all_users():
 
 
 def fetch_all_threads():
-    print("Not yet implemented.")
+
+    login = db.pop_login()
+    fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+    fetch.login(db)
+
+    print("### Beginning thread download...")
+    thread_id = db.pop_thread()
+    while thread_id is not None:
+        print("## Scraping thread %s..." % thread_id)
+
+        page = 1
+        has_more_pages = True
+        while has_more_pages:
+            print("# Scraping thread %s, page %s... " % thread_id, page)
+            has_more_pages = fetch.fetch_thread_page(thread_id,page,db)
+            page += 1
+            short_pause()
+
+            thread_id = db.pop_thread()
+
+    print("Thread scraping completed.")
+
     #
     # login = db.pop_login()
     # fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])

@@ -5,9 +5,12 @@ import cfscrape
 import datetime
 import hashlib
 
+from platform import system as system_name # Returns the system/OS name
+from os import system as system_call       # Execute a shell command
+
+
 from lxml import html
 from lxml import etree
-
 
 
 class Fetcher:
@@ -39,13 +42,27 @@ class Fetcher:
 
         self.set_proxy(new_proxy)
 
+    def ping(host):
+        """
+        Returns True if host (str) responds to a ping request.
+        Remember that some hosts may not respond to a ping request even if the host name is valid.
+        """
 
-    def post(self):
+        # Ping parameters as function of OS
+        parameters = "-n 1" if system_name().lower() == "windows" else "-c 1"
+
+        # Pinging
+        return system_call("ping " + parameters + " " + host) == 0
+
+
+    def post(self,url,**kwargs):
         print("TO BE IMPLEMENTED")
         #Try posting, if it fails, try to ping stormfront.org
         # If successful, it's probably the proxy that's the problem. Change proxy and try again.
         # If failed, its the internet or stormfront. Wait for X minutes then try again.
-        # self.scraper.post()
+        # If result returned, check whether we have been logged out.
+        # If we have been logged out, call login(). Then try again. If same fail again, user has been blocked: give up().
+        # self.scraper.post(url,**kwargs)
 
 
     def login(self,db):
@@ -185,7 +202,7 @@ class Fetcher:
         if len(names) == 0:
             print("WARNING: Failed getting user id %s" % userid)
             db.set_user_failed(userid)
-            
+
         else:
             name = names[0]
 
@@ -210,9 +227,32 @@ class Fetcher:
             db.add_user(userid,data)
 
 
+    @staticmethod
+    def parse_date(datestr):
+        datestr = datestr.strip().lower()
+        if datestr.startswith("yesterday"):
+            #e.g. Yesterday, 05:34 PM
+            timestr = datestr[len("yesterday,"):].strip()
+            time = datetime.datetime.strptime(timestr, "%I:%M %p")
+
+            yesterday = datetime.datetime.today() - datetime.timedelta(1)
+
+            return yesterday.replace(hour=time.hour, minute=time.minute,second=0,microsecond=0)
+
+        elif datestr.startswith("today"):
+        #Today, 06:03 AM
+            timestr = datestr[len("today,"):].strip()
+            time = datetime.datetime.strptime(timestr, "%I:%M %p")
+
+            return datetime.datetime.today().replace(hour=time.hour, minute=time.minute,second=0,microsecond=0)
+        else:
+            # 05-29-2017, 01:41 PM
+            return datetime.datetime.strptime(datestr, "%m-%d-%Y, %I:%M %p")
+
+
+
+
     def fetch_thread_page(self,tid,page,db):
-
-
 
         headers = {
             'pragma': 'no-cache',
@@ -236,25 +276,47 @@ class Fetcher:
         if "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).count("No Thread specified.") > 0:
             #thread does not exist
             print("No such thread")
-
             return False
 
         else:
+            messages = tree.xpath("//div[@id='posts']//table[starts-with(@id,'post')]")
+
+            #First page! Create thread and forums
             if page == 1:
-                print("This is first page of thread. Will add thread info to db!")
+                print("This is first page of thread. Will add thread and forum info to db! use first post date.")
+                forums = tree.xpath("//span[@class='navbar']/a")
+
+                # create forums
                 print("TODO TODO TODO!")
-                #TODO: extract thread info!
+                parentid = None
+                for fi in range(1, len(forums)):
+                    forumid = forums[fi].attrib["href"].split("/forum/f")[1][:-1]
+                    forumtitle = forums[1].xpath("span/text()")[0]
+
+                    data = {'id': forumid, 'title': forumtitle, 'parent': parentid}
+                    db.add_forum(forumid,data)
+
+                    parentid = forumid
+
+
+                threadtitle = tree.xpath("//td[@class='navbar']//strong/span[@itemprop='title']/text()")[0]
+                threaddate = ''.join(messages[0].xpath('.//td[@class="thead"][1]/text()')).strip()
+                threaddateparse = Fetcher.parse_date(threaddate)
+
+                data = {'title': threadtitle, 'forum': parentid, 'createdate': threaddateparse, 'createdatestr': threaddate  }
+                db.add_thread(tid,data)
 
 
             #Process posts
             i = 0
-            for message in tree.xpath("//div[@id='posts']//table[starts-with(@id,'post')]"):
+            for message in messages:
                 i = i + 1
 
                 messageid = message.attrib['id'].split('t')[1]
                 authorid = message.xpath('.//*[@class="bigusername"]')[0].attrib['href'].split('=')[1]
                 datestr = ''.join(message.xpath('.//td[@class="thead"][1]/text()')).strip()
-                dateparse = datetime.datetime.strptime(datestr,"%m-%d-%Y, %I:%M %p")
+                dateparse = Fetcher.parse_date(datestr)
+                #dateparse = datetime.datetime.strptime(datestr,"%m-%d-%Y, %I:%M %p")
 
                 fullmessage = message.xpath(".//*[starts-with(@id,'post_message_')]")[0]
                 fullmessagehtml = etree.tostring(fullmessage)
@@ -262,6 +324,10 @@ class Fetcher:
 
                 signature = " ".join(message.xpath(".//div[@class='hidesig']//text()")).strip()
                 title = message.xpath(".//td[@class='alt1']/div/strong/text()")[0]
+
+                #postdate = message.xpath(".//a[starts-with(@name,'post')]/text")[0].strip()
+                print(datestr)
+
 
                 quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
                 hasquote = False
@@ -283,8 +349,13 @@ class Fetcher:
                         'title': title, 'hasquote': hasquote, 'quoteofpostid': quoteofpostid, 'quoteofusername': quoteofusername,
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
-                db.add_post(messageid, data)
-
+            db.add_post(messageid, data)
 
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0
+
+# if __name__ == '__main__':
+#     fetch = Fetcher("wickedness","tintolito","86.62.108.219:53281")
+#     fetch.login(None)
+#     fetch.fetch_thread_page(1213459,1,None)
+

@@ -110,9 +110,9 @@ class Database:
     # parent_id
     # processed: None or timestamp
 
-    def add_thread(self,id,data):
-        result = self.db.thread.update({"id": id}, data, True)
-        result = self.db.thread.update({"id": id}, {'$set': {'inserted': datetime.utcnow()}})
+    def add_thread(self,tid,data):
+        result = self.db.thread.update({"id": tid}, data, True)
+        result = self.db.thread.update({"id": tid}, {'$set': {'inserted': datetime.utcnow()}})
 
     def thread_completed(self,tid):
         result = self.db.thread.update({"id": tid}, {'$set': {'completed': datetime.utcnow()}})
@@ -133,7 +133,7 @@ class Database:
 
         # Set used
         self.db.thread.update({"id": tid}, {'$set': {'processingstart': datetime.utcnow()}})
-        return ret
+        return tid
 
     ## Posts
     def add_post(self,pid,data):
@@ -182,3 +182,10 @@ class Database:
         for user_id2 in with_users:
             data = {"id1": user_id1,"id2": user_id2}
             self.db.friend.update(data, data, True)
+
+
+    ## FORUMS
+    #forum: id, title, parentid
+
+    def add_forum(self,fid,data):
+        self.db.forum.update({"id": fid}, data, True)
