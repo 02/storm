@@ -149,7 +149,13 @@ class Database:
         nr = self.db.user.find({'status': 0}).count()
         ret = self.db.user.find({'status': 0}).limit(-1).skip(randint(0, nr - 1)).next()
 
-        return ret
+        if ret is not None:
+            self.set_user_processing(ret['id'])
+            return ret['id']
+        else:
+            return None
+
+
 
     def set_user_processing(self,uid):
         result = self.db.user.update({"id": uid}, {'$set': {'processing_started': datetime.utcnow(), 'status': 1}})

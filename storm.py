@@ -23,25 +23,24 @@ def long_pause():
     time.sleep(random.randint(long_pause_min,long_pause_max))
 
 def fetch_all_users():
-    #Repeat:
-        # Login
-        #Repeat:
-            # Take a random un-fetched user from database, mark as being under processing
-            # get_user_friendlist(1, cookie)
-            # get_user_info(336591, cookie)
-            # Pause randomly
-            # If logged out, quit loop
-        #sleep a bit
-
-    #db.set_user_processing(uid)
 
     login = db.pop_login()
-
     fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
-
     fetch.login()
-    fetch.get_user_friendlist(1,db)
-    fetch.get_user_info(1,db)
+
+    print("Beginning user download...")
+    user_id = db.pop_user()
+    while user_id is not None:
+        print("Scraping user %s..." % user_id)
+
+        fetch.get_user_friendlist(1, db)
+        fetch.get_user_info(1, db)
+
+        print("Taking short rest...")
+        short_pause()
+        user_id = db.pop_user()
+
+    print("User scraping completed.")
 
 
 
