@@ -27,15 +27,15 @@ def fetch_all_users():
 
     login = db.pop_login()
     fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
-    fetch.login(db)
+    fetch.login()
 
     print("Beginning user download...")
     user_id = db.pop_user()
     while user_id is not None:
         print("Scraping user %s..." % user_id)
 
-        fetch.get_user_friendlist(user_id, db)
-        fetch.get_user_info(user_id, db)
+        fetch.get_user_friendlist(user_id)
+        fetch.get_user_info(user_id)
 
         print("Taking short rest...")
         short_pause()
@@ -63,7 +63,7 @@ def fetch_all_threads(username, password, proxy):
     #login = db.pop_login()
     #fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
     fetch = fetcher.Fetcher(username, password, proxy)
-    fetch.login(db)
+    fetch.login()
 
     print("### Beginning thread download with user %s..." % username)
     thread_id = db.pop_thread()
@@ -74,7 +74,7 @@ def fetch_all_threads(username, password, proxy):
         has_more_pages = True
         while has_more_pages:
             print("# %s Scraping thread %s, page %s... " % (username, thread_id, page))
-            has_more_pages = fetch.fetch_thread_page(thread_id, page, db)
+            has_more_pages = fetch.fetch_thread_page(thread_id, page)
             page += 1
             short_pause()
 
