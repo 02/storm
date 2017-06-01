@@ -30,7 +30,7 @@ class Fetcher:
         self.timeout = timeout
 
         #Connect to database.
-        self.db = Database("stormfront")
+       # self.db = Database("stormfront")
 
 
         self.scraper = cfscrape.create_scraper()
@@ -42,7 +42,7 @@ class Fetcher:
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr.setFormatter(formatter)
         self.logger.addHandler(hdlr)
-        self.logger.setLevel(logging.WARNING)
+        self.logger.setLevel(logging.INFO)
 
 
     def set_proxy(self, proxy):
@@ -90,12 +90,12 @@ class Fetcher:
         while not success:
 
             try:
-
-                print()
+                self.logger.info("Getting data.")
+                self.logger.info(kwargs)
                 res = self.scraper.get(url, **kwargs)
 
                 self.logger.info(res.content)
-                print()
+                self.logger.info("\n\n\n\n")
 
                 if 400 <= res.status_code < 600:
                     self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
@@ -210,6 +210,8 @@ class Fetcher:
 
         #pprint.pprint(self.cookies)
 
+        self.logger.info(res.content)
+
         res.raise_for_status()
 
 
@@ -301,24 +303,24 @@ class Fetcher:
 
     def fetch_thread_page(self,tid,page):
 
-        headers = {
-            'pragma': 'no-cache',
-            'accept-encoding': 'gzip, deflate, sdch, br',
-            'accept-language': 'en-US,en;q=0.8',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'cache-control': 'no-cache',
-            'authority': 'www.stormfront.org',
-            #  'cookie': cookie, #'gsScrollPos=;__cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C;bb2lastvisit=1493064370; bb2lastactivity=0; bb2sessionhash=a3ef28efe4019980f3c84ed019b33386',
-            'referer': 'https://www.stormfront.org/forum/login.php?do=login',
-        }
+        # headers = {
+        #     'pragma': 'no-cache',
+        #     'accept-encoding': 'gzip, deflate, sdch, br',
+        #     'accept-language': 'en-US,en;q=0.8',
+        #     'upgrade-insecure-requests': '1',
+        #     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+        #     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        #     'cache-control': 'no-cache',
+        #     'authority': 'www.stormfront.org',
+        #     #  'cookie': cookie, #'gsScrollPos=;__cfduid=d3a7beab45ee0e73ce2785686259bcff41491228171; VRcheck=%2C339842%2C;bb2lastvisit=1493064370; bb2lastactivity=0; bb2sessionhash=a3ef28efe4019980f3c84ed019b33386',
+        #     'referer': 'https://www.stormfront.org/forum/login.php?do=login',
+        # }
         params = (
         )
         #r = self.scraper.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
         #                 headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
         r = self.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
-                         headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
+                         headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout)
         tree = html.fromstring(r.content)
 
         #Does thread exist?
@@ -399,7 +401,12 @@ class Fetcher:
 
 if __name__ == '__main__':
     fetch = Fetcher("wickedness","tintolito","86.62.108.219:53281")
-    fetch.login(None)
-    #fetch.fetch_thread_page(1213459,1,None)
-    fetch.get_user_friendlist(1,None)
+    fetch.login()
+    #fetch.fetch_thread_page(1213459,1)
+    fetch.get_user_friendlist(1)
+    fetch.fetch_thread_page(1213459, 1)
+    # fetch.get_user_friendlist(2)
+    # fetch.get_user_friendlist(3)
+    # fetch.get_user_friendlist(4)
+    # fetch.get_user_friendlist(5)
 
