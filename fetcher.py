@@ -62,7 +62,7 @@ class Fetcher:
         return system_call("ping " + parameters + " " + host) == 0
 
 
-    def post(self,db,url,**kwargs):
+    def get(self,db,url, **kwargs):
         # Try posting, if it fails, try to ping stormfront.org
         # If successful, it's probably the proxy that's the problem. Change proxy and try again.
         # If failed, its the internet or stormfront. Wait for X minutes then try again.
@@ -77,7 +77,16 @@ class Fetcher:
         while not success:
 
             try:
-                res = self.scraper.post(url, **kwargs)
+
+                #headers = self.headers, params = params, cookies = self.cookies, timeout = self.timeout, proxies = self.proxy
+                #params = kwargs['params']
+
+                res = self.scraper.get(url, **kwargs)
+                #res = self.scraper.post(url, headers = self.headers, params = params, cookies = self.cookies, proxies = self.proxy)
+                #return self.scraper.post(url, headers = self.headers, params = params, cookies = self.cookies, proxies = self.proxy)
+
+                print("WTF")
+
 
                 if 400 <= res.status_code < 600:
                     eprint("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
@@ -198,8 +207,7 @@ class Fetcher:
             'page': '1',
         }
 
-        #r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
-        r = self.post(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
+        r = self.get(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
 
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
@@ -217,7 +225,7 @@ class Fetcher:
     def get_user_info(self, userid,db):
         params = {'u': userid}
         #r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxy)
-        r = self.post(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,
+        r = self.get(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,
                              cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
         tree = html.fromstring(r.content)
 
@@ -296,7 +304,7 @@ class Fetcher:
         )
         #r = self.scraper.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
         #                 headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
-        r = self.post(db,"https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
+        r = self.get(db,"https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
                          headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
         tree = html.fromstring(r.content)
 
@@ -376,8 +384,9 @@ class Fetcher:
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0
 
-# if __name__ == '__main__':
-#     fetch = Fetcher("wickedness","tintolito","86.62.108.219:53281")
-#     fetch.login(None)
-#     fetch.fetch_thread_page(1213459,1,None)
+if __name__ == '__main__':
+    fetch = Fetcher("wickedness","tintolito","86.62.108.219:53281")
+    fetch.login(None)
+    #fetch.fetch_thread_page(1213459,1,None)
+    fetch.get_user_friendlist(1,None)
 
