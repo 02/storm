@@ -85,10 +85,14 @@ class Fetcher:
                 #res = self.scraper.post(url, headers = self.headers, params = params, cookies = self.cookies, proxies = self.proxy)
                 #return self.scraper.post(url, headers = self.headers, params = params, cookies = self.cookies, proxies = self.proxy)
 
-                print("WTF")
 
 
                 if 400 <= res.status_code < 600:
+                    eprint("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
+                    eprint("Not sure what to do. Just saying.")
+
+
+                if res.status_code is 501:
                     eprint("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
                     if attempts_error_status_code > 0:
                         eprint("Trying to solve by logging in.")
@@ -112,7 +116,6 @@ class Fetcher:
                     else:
                         eprint("Already tried all attempts. Giving up.")
                         raise Exception("Got logged out too many times. Giving up.")
-
 
                 success = True
                 return res
