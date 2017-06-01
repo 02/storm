@@ -91,19 +91,16 @@ class Fetcher:
 
             try:
 
-                #headers = self.headers, params = params, cookies = self.cookies, timeout = self.timeout, proxies = self.proxy
-                #params = kwargs['params']
-
+                print()
                 res = self.scraper.get(url, **kwargs)
-                #res = self.scraper.post(url, headers = self.headers, params = params, cookies = self.cookies, proxies = self.proxy)
-                #return self.scraper.post(url, headers = self.headers, params = params, cookies = self.cookies, proxies = self.proxy)
 
-
+                self.logger.notice(res.content)
+                print()
 
                 if 400 <= res.status_code < 600:
                     self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
                     self.logger.error("Not sure what to do. Just saying.")
-                    self.logger.error(res.content)
+                    #self.logger.error(res.content)
 
 
                 if res.status_code is 501:
