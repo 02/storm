@@ -59,24 +59,21 @@ def fetch_all_threads_parallel():
 
 def fetch_all_threads(username, password, proxy):
 
-    print("Fetch_all_threads: %s, %s, %s " % (username,password,proxy))
-    return
-    ###
 
     #login = db.pop_login()
     #fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
     fetch = fetcher.Fetcher(username, password, proxy)
     fetch.login(db)
 
-    print("### Beginning thread download...")
+    print("### Beginning thread download with user %s..." % username)
     thread_id = db.pop_thread()
     while thread_id is not None:
-        print("## Scraping thread %s..." % thread_id)
+        print("## %s Scraping thread %s..." % (username, thread_id))
 
         page = 1
         has_more_pages = True
         while has_more_pages:
-            print("# Scraping thread %s, page %s... " % (thread_id, page))
+            print("# %s Scraping thread %s, page %s... " % (username, thread_id, page))
             has_more_pages = fetch.fetch_thread_page(thread_id, page, db)
             page += 1
             short_pause()
