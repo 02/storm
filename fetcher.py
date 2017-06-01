@@ -94,7 +94,7 @@ class Fetcher:
                 print()
                 res = self.scraper.get(url, **kwargs)
 
-                self.logger.notice(res.content)
+                self.logger.info(res.content)
                 print()
 
                 if 400 <= res.status_code < 600:
