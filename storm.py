@@ -1,13 +1,12 @@
 from multiprocessing import Pool
+import multiprocessing
 import sys
 import os
 import random
 import time
 
-##
 import database
 import fetcher
-
 
 short_pause_min = 5
 short_pause_max = 10
@@ -46,10 +45,27 @@ def fetch_all_users():
 
 
 
-def fetch_all_threads():
+def fetch_all_threads_parallel():
+    logins = db.get_all_login()
+    jobs = []
+    for login in logins:
+        p = multiprocessing.Process(target=fetch_all_threads, args=(login['username'],login['password'],login['proxy']))
+        jobs.append(p)
+        p.start()
 
-    login = db.pop_login()
-    fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+    print("Out of loop.")
+
+
+
+def fetch_all_threads(username, password, proxy):
+
+    print("Fetch_all_threads: %s, %s, %s " % (username,password,proxy))
+    return
+    ###
+
+    #login = db.pop_login()
+    #fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+    fetch = fetcher.Fetcher(username, password, proxy)
     fetch.login(db)
 
     print("### Beginning thread download...")
@@ -148,9 +164,13 @@ def print_instructions():
     print("--monitor-new-users \t\t\t Continuously scrape new users. NOT YET IMPLEMENTED.")
 
 
+def test(arg):
+    for i in range(100):
+        print(arg, i)
+        time.sleep(random.random())
+
 def main():
     print("Starting up!")
-
 
     if len(sys.argv) < 2:
         print("Please provide arguments.")
@@ -188,14 +208,12 @@ def main():
         print("Populating user database...")
 
         db.populate_users_to_be_fetched(int(sys.argv[2]),int(sys.argv[3]))
-
-
         fetch_all_users()
 
 
-    elif command == "--continue-get-users":
-        print("Continuing user download...")
-        fetch_all_users()
+    elif command == "--continue-get-threads":
+        print("Continuing thread download...")
+        fetch_all_threads_parallel()
 
     elif command == "--start-get-threads":
 
@@ -208,8 +226,7 @@ def main():
         # Add to thread database all number between fromid to toid.
         db.populate_threads_to_be_fetched(int(sys.argv[2]), int(sys.argv[3]))
 
-
-        fetch_all_threads()
+        fetch_all_threads_parallel()
 
     elif command == "--continue-get-users":
 

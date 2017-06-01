@@ -9,15 +9,14 @@ import hashlib
 import time
 import random
 
+import logging
+
 from platform import system as system_name # Returns the system/OS name
 from os import system as system_call       # Execute a shell command
 
 from lxml import html
 from lxml import etree
 
-
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
 
 
 class Fetcher:
@@ -31,6 +30,14 @@ class Fetcher:
         self.scraper = cfscrape.create_scraper()
 
         self.set_proxy(proxy)
+
+        self.logger = logging.getLogger('thread_' + username)
+        hdlr = logging.FileHandler('../log/thread_' + username + '.log')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        hdlr.setFormatter(formatter)
+        self.logger.addHandler(hdlr)
+        self.logger.setLevel(logging.WARNING)
+
 
     def set_proxy(self, proxy):
         if proxy is not None:
@@ -88,56 +95,56 @@ class Fetcher:
 
 
                 if 400 <= res.status_code < 600:
-                    eprint("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
-                    eprint("Not sure what to do. Just saying.")
-                    eprint(res.content)
+                    self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
+                    self.logger.error("Not sure what to do. Just saying.")
+                    self.logger.error(res.content)
 
 
                 if res.status_code is 501:
-                    eprint("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
+                    self.logger.error("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
                     if attempts_error_status_code > 0:
-                        eprint("Trying to solve by logging in.")
+                        self.logger.error("Trying to solve by logging in.")
                         self.login(db)
                         attempts_error_status_code -= 1
                         continue
                     else:
-                        eprint("Already tried all attempts. Giving up.")
+                        self.logger.error("Already tried all attempts. Giving up.")
                         raise Exception("Got status error too many times. Giving up. %s, reason: %s."  % (res.status_code, res.reason))
 
 
                 if len(html.fromstring(res.content).xpath("//input[@value='guest']")) > 0 or len(
                     html.fromstring(res.content).xpath("//input[@value='Log in']")) > 0:
-                    eprint("WARNING: No longer seem to be logged in.")
+                    self.logger.error("WARNING: No longer seem to be logged in.")
 
                     if attempts_logged_out > 0:
-                        eprint("Trying to solve by logging in...")
+                        self.logger.error("Trying to solve by logging in...")
                         self.login(db)
                         attempts_logged_out -= 1
                         continue
                     else:
-                        eprint("Already tried all attempts. Giving up.")
+                        self.logger.error("Already tried all attempts. Giving up.")
                         raise Exception("Got logged out too many times. Giving up.")
 
                 success = True
                 return res
 
             except requests.exceptions.RequestException:
-                eprint("WARNING: Post failed. Trying ping...")
+                self.logger.error("WARNING: Post failed. Trying ping...")
 
                 if self.ping("www.stormfront.org"):
                     #Ping without using proxy. If works, it is probably the proxy that's fucked. Change proxy.
-                    eprint("Got response from ping. Probably proxy that's down. Trying another.")
+                    self.logger.error("Got response from ping. Probably proxy that's down. Trying another.")
                     self.try_another_proxy(db)
                 else:
                     #No ping, probably internet or SF that's down. Long rest then try again!
-                    eprint("No reponse. Probably SF or internet that's down. Resting and then trying again.")
+                    self.logger.error("No reponse. Probably SF or internet that's down. Resting and then trying again.")
                     time.sleep(random.randint(60,240))
 
 
 
     def login(self,db):
 
-        print("Attempting to by-pass CloudFare bot control...")
+        self.logger.info("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
         #cookie_value, user_agent = cfscrape.get_cookie_string("https://www.stormfront.org")
@@ -157,7 +164,7 @@ class Fetcher:
         #request = "Cookie: %s\r\nUser-Agent: %s\r\n" % (cookie_value, user_agent)
         #print(request)
 
-        print("Logging in with user %s..." % self.username)
+        self.logger.info("Logging in with user %s..." % self.username)
 
         self.headers = {
             'origin': 'https://www.stormfront.org',

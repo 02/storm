@@ -66,6 +66,21 @@ class Database:
     def set_login_not_used(self,username):
         self.db.login.update({"username": username}, {'$set': {'used': None}})
 
+    def get_all_login(self):
+        ret = self.db.login.find({'broken': None})
+
+        logins = []
+        for login in ret:
+            if login['proxy'] is None:
+                login['proxy'] = self.assign_login_a_random_unused_proxy(login['username'])
+            logins.append(login)
+
+        # Set used
+        self.db.login.update({}, {'$set': {'used': datetime.utcnow()}})
+
+        return logins
+
+
     def pop_login(self):
         nr = self.db.login.find().count()
 
