@@ -153,9 +153,12 @@ def print_instructions():
     print("--clean-data \t\t\t Removes all scraped data.")
     print("--clean-login \t\t\t Removes all logins and proxies.")
     print("--start-get-users <from_id> <to_id> \t\t\t Start download of users.")
+
     print("--continue-get-users \t\t\t Continue previous user download.")
-    print("--start-get-threads <from_id> <to_id> \t\t\t Start download of threads.")
-    print("--continue-get-threads \t\t\t Continue previous user download.")
+
+    print("--populate-threads <from_id> <to_id> \t\t\t Set threads to download.")
+    print("--get-threads-single \t\t\t Continue previous user download.")
+    print("--get-threads-parallel \t\t\t Continue previous user download.")
 
     print("--add-proxy <IP> \t\t\t Add proxy to proxy list.")
     print("--add-login <username> <password> \t\t\t Add new user to login list.")
@@ -210,11 +213,15 @@ def main():
         fetch_all_users()
 
 
-    elif command == "--continue-get-threads":
+    elif command == "--get-threads-single":
         print("Continuing thread download...")
         fetch_all_thread_single()
 
-    elif command == "--start-get-threads":
+    elif command == "--get-threads-parallel":
+        print("Continuing thread download...")
+        fetch_all_threads_parallel()
+
+    elif command == "--populate-threads":
 
         if len(sys.argv) != 4:
             print_instructions()
@@ -225,7 +232,6 @@ def main():
         # Add to thread database all number between fromid to toid.
         db.populate_threads_to_be_fetched(int(sys.argv[2]), int(sys.argv[3]))
 
-        fetch_all_thread_single()
 
     elif command == "--continue-get-users":
 

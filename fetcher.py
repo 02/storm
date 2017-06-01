@@ -30,7 +30,7 @@ class Fetcher:
         self.timeout = timeout
 
         #Connect to database.
-       # self.db = Database("stormfront")
+        self.db = Database("stormfront")
 
 
         self.scraper = cfscrape.create_scraper()
