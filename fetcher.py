@@ -17,15 +17,21 @@ from os import system as system_call       # Execute a shell command
 from lxml import html
 from lxml import etree
 
+from database import Database
+
 
 
 class Fetcher:
 
-    def __init__(self, username, password, proxy,timeout=120):
+    def __init__(self, username, password, proxy, timeout=120):
         self.cookies = None
         self.username = username
         self.password = password
         self.timeout = timeout
+
+        #Connect to database.
+        self.db = Database("stormfront")
+
 
         self.scraper = cfscrape.create_scraper()
 
@@ -49,8 +55,8 @@ class Fetcher:
             self.proxy = None
 
 
-    def try_another_proxy(self,db):
-        new_proxy = db.set_proxy_down_assign_new(self.proxy['http'], self.username)
+    def try_another_proxy(self):
+        new_proxy = self.db.set_proxy_down_assign_new(self.proxy['http'], self.username)
         if new_proxy is None:
             raise Exception("Ran out of proxies! Giving up.")
 
@@ -69,7 +75,7 @@ class Fetcher:
         return system_call("ping " + parameters + " " + host) == 0
 
 
-    def get(self,db,url, **kwargs):
+    def get(self,url, **kwargs):
         # Try posting, if it fails, try to ping stormfront.org
         # If successful, it's probably the proxy that's the problem. Change proxy and try again.
         # If failed, its the internet or stormfront. Wait for X minutes then try again.
@@ -104,7 +110,7 @@ class Fetcher:
                     self.logger.error("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
                     if attempts_error_status_code > 0:
                         self.logger.error("Trying to solve by logging in.")
-                        self.login(db)
+                        self.login()
                         attempts_error_status_code -= 1
                         continue
                     else:
@@ -118,7 +124,7 @@ class Fetcher:
 
                     if attempts_logged_out > 0:
                         self.logger.error("Trying to solve by logging in...")
-                        self.login(db)
+                        self.login()
                         attempts_logged_out -= 1
                         continue
                     else:
@@ -134,7 +140,7 @@ class Fetcher:
                 if self.ping("www.stormfront.org"):
                     #Ping without using proxy. If works, it is probably the proxy that's fucked. Change proxy.
                     self.logger.error("Got response from ping. Probably proxy that's down. Trying another.")
-                    self.try_another_proxy(db)
+                    self.try_another_proxy()
                 else:
                     #No ping, probably internet or SF that's down. Long rest then try again!
                     self.logger.error("No reponse. Probably SF or internet that's down. Resting and then trying again.")
@@ -142,7 +148,7 @@ class Fetcher:
 
 
 
-    def login(self,db):
+    def login(self):
 
         self.logger.info("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
@@ -156,7 +162,7 @@ class Fetcher:
 
             except requests.exceptions.RequestException:
                 # Probably the proxy!
-                self.try_another_proxy(db)
+                self.try_another_proxy()
 
 
         #self.cookies = cookie_value
@@ -210,7 +216,7 @@ class Fetcher:
         res.raise_for_status()
 
 
-    def get_user_friendlist(self, userid, db):
+    def get_user_friendlist(self, userid):
         params = {
             'tab': 'friends',
             'u': userid,
@@ -218,13 +224,13 @@ class Fetcher:
             'page': '1',
         }
 
-        r = self.get(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
+        r = self.get('https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
 
         tree = html.fromstring(r.content)
         names = tree.xpath('//a[@class="bigusername"]')
         with_ids = [name.attrib['href'].split("=")[1] for name in names]
 
-        db.add_friends(userid,with_ids)
+        self.db.add_friends(userid,with_ids)
 
     @staticmethod
     def clean_text_string(string):
@@ -233,10 +239,10 @@ class Fetcher:
         string = string.replace("\\t", " ")
         return ' '.join(string.split())
 
-    def get_user_info(self, userid,db):
+    def get_user_info(self, userid):
         params = {'u': userid}
         #r = self.scraper.get('https://www.stormfront.org/forum/member.php',headers=self.headers, params=params, cookies=self.cookies, timeout=self.timeout, proxies = self.proxy)
-        r = self.get(db,'https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,
+        r = self.get('https://www.stormfront.org/forum/member.php', headers=self.headers, params=params,
                              cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
         tree = html.fromstring(r.content)
 
@@ -245,7 +251,7 @@ class Fetcher:
 
         if len(names) == 0:
             print("WARNING: Failed getting user id %s" % userid)
-            db.set_user_failed(userid)
+            self.db.set_user_failed(userid)
 
         else:
             name = names[0]
@@ -268,7 +274,7 @@ class Fetcher:
 
             data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
                     'ministattext': profiletextonly, 'profiletext': ministattextonly}
-            db.add_user(userid,data)
+            self.db.add_user(userid,data)
 
 
     @staticmethod
@@ -296,7 +302,7 @@ class Fetcher:
 
 
 
-    def fetch_thread_page(self,tid,page,db):
+    def fetch_thread_page(self,tid,page):
 
         headers = {
             'pragma': 'no-cache',
@@ -314,7 +320,7 @@ class Fetcher:
         )
         #r = self.scraper.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
         #                 headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
-        r = self.get(db,"https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
+        r = self.get("https://www.stormfront.org/forum/t{}-{}/".format(tid,page),
                          headers=headers, params=params, cookies=self.cookies, timeout=self.timeout)
         tree = html.fromstring(r.content)
 
@@ -322,7 +328,7 @@ class Fetcher:
         if "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).count("No Thread specified.") > 0:
             #thread does not exist
             print("No such thread")
-            db.thread_failed(tid)
+            self.db.thread_failed(tid)
             return False
 
         else:
@@ -339,7 +345,7 @@ class Fetcher:
                     forumtitle = forums[1].xpath("span/text()")[0]
 
                     data = {'id': forumid, 'title': forumtitle, 'parent': parentid}
-                    db.add_forum(forumid,data)
+                    self.db.add_forum(forumid,data)
 
                     parentid = forumid
 
@@ -349,7 +355,7 @@ class Fetcher:
                 threaddateparse = Fetcher.parse_date(threaddate)
 
                 data = {'title': threadtitle, 'forum': parentid, 'createdate': threaddateparse, 'createdatestr': threaddate  }
-                db.add_thread(tid,data)
+                self.db.add_thread(tid,data)
 
 
             #Process posts
@@ -389,7 +395,7 @@ class Fetcher:
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
                 #pprint.pprint(data)
-                db.add_post(messageid, data)
+                self.db.add_post(messageid, data)
 
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0
