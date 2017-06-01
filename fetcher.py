@@ -90,6 +90,7 @@ class Fetcher:
                 if 400 <= res.status_code < 600:
                     eprint("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
                     eprint("Not sure what to do. Just saying.")
+                    eprint(res.content)
 
 
                 if res.status_code is 501:
@@ -232,7 +233,6 @@ class Fetcher:
                              cookies=self.cookies, timeout=self.timeout, proxies=self.proxy)
         tree = html.fromstring(r.content)
 
-        print(r.content)
 
         names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
 
