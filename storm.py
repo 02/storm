@@ -56,9 +56,11 @@ def fetch_all_threads_parallel():
     print("Out of loop.")
 
 
+def fetch_all_thread_single():
+    login = db.pop_login()
+    fetch_all_threads(login['username'], login['password'], login['proxy'])
 
 def fetch_all_threads(username, password, proxy):
-
 
     #login = db.pop_login()
     #fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
@@ -210,7 +212,7 @@ def main():
 
     elif command == "--continue-get-threads":
         print("Continuing thread download...")
-        fetch_all_threads_parallel()
+        fetch_all_thread_single()
 
     elif command == "--start-get-threads":
 
@@ -223,7 +225,7 @@ def main():
         # Add to thread database all number between fromid to toid.
         db.populate_threads_to_be_fetched(int(sys.argv[2]), int(sys.argv[3]))
 
-        fetch_all_threads_parallel()
+        fetch_all_thread_single()
 
     elif command == "--continue-get-users":
 
