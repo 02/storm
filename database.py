@@ -125,7 +125,7 @@ class Database:
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
         for i in range(fromnr,tonr):
-            self.db.thread.update({'id': i},{'id': i,'status': 0},True)
+            self.db.thread.update({'id': i},{'$setOnInsert':{'id': i,'status': 0}},True)
 
     def pop_thread(self):
         nr = self.db.thread.find({'status': 0}).count()
@@ -178,7 +178,7 @@ class Database:
     def populate_users_to_be_fetched(self, fromnr, tonr):
         # Add all
         for i in range(fromnr, tonr):
-            self.db.user.update({'id': i}, {'id': i,'status': 0}, True)
+            self.db.user.update({'id': i}, {'$setOnInsert': {'id': i,'status': 0}}, True)
 
     def add_user(self,uid,data):
         result = self.db.user.update({"id": uid}, data, True)
