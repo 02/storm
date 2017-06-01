@@ -82,8 +82,7 @@ class Database:
 
 
     def pop_login(self):
-        nr = self.db.login.find().count()
-
+        nr = self.db.login.find({'used': None, 'broken': None}).count()
         if nr == 0:
             return None
 
