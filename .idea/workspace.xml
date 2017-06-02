@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4adc07b6-7cad-4f04-bcff-295c5e0807b7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database.py" afterPath="$PROJECT_DIR$/database.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fetcher.py" afterPath="$PROJECT_DIR$/fetcher.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="328" column="24" lean-forward="false" selection-start-line="328" selection-start-column="24" selection-end-line="328" selection-end-column="24" />
+            <state relative-caret-position="323">
+              <caret line="128" column="16" lean-forward="false" selection-start-line="128" selection-start-column="16" selection-end-line="128" selection-end-column="16" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -41,43 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.1/python_stubs/848100255/lxml/etree/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="357" column="4" lean-forward="false" selection-start-line="357" selection-start-column="4" selection-end-line="357" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sessions.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/requests/sessions.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6461">
-              <caret line="524" column="8" lean-forward="false" selection-start-line="524" selection-start-column="8" selection-end-line="524" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/requests/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10881">
-              <caret line="869" column="8" lean-forward="false" selection-start-line="869" selection-start-column="8" selection-end-line="869" selection-end-column="8" />
-              <folding>
-                <element signature="e#129#147#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="database.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+            <state relative-caret-position="173">
+              <caret line="65" column="24" lean-forward="false" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="24" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -96,8 +65,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>get(</find>
-      <find>pop_login</find>
       <find>logg</find>
       <find>logger.</find>
       <find>no longer</find>
@@ -126,6 +93,8 @@
       <find>populate</find>
       <find>username</find>
       <find>db.friend</find>
+      <find>not</find>
+      <find>not surew</find>
     </findStrings>
     <replaceStrings>
       <replace>datetime.now()</replace>
@@ -138,9 +107,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/fetcher.py" />
         <option value="$PROJECT_DIR$/storm.py" />
         <option value="$PROJECT_DIR$/database.py" />
+        <option value="$PROJECT_DIR$/fetcher.py" />
       </list>
     </option>
   </component>
@@ -559,16 +528,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fetcher.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="328" column="24" lean-forward="false" selection-start-line="328" selection-start-column="24" selection-end-line="328" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/storm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="827">
@@ -581,10 +540,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+        <state relative-caret-position="173">
+          <caret line="65" column="24" lean-forward="false" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="24" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fetcher.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="128" column="16" lean-forward="false" selection-start-line="128" selection-start-column="16" selection-end-line="128" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>

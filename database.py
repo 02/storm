@@ -63,6 +63,9 @@ class Database:
     # assign_user_a_random_unused_proxy()
     # return new proxy
 
+    def set_login_broken(self,username):
+        self.db.login.update({'username': username}, {'$set': {'broken': True, 'broke_time': datetime.utcnow()}})
+
     def set_all_logins_not_used(self):
         self.db.login.update({}, {'$set': {'used': None}})
 
@@ -186,6 +189,8 @@ class Database:
     # User:
     # id,username,inserted, ..
     # status: 0 - non-processed, 1 - under processing, -1 error, 2 processed
+
+
 
     def set_all_users_not_used(self):
         result = self.db.user.update({"status": 1}, {'$set': {'status': 0}})

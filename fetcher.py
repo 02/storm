@@ -109,13 +109,11 @@ class Fetcher:
                 self.logger.info(res.content)
                 self.logger.info("\n\n\n\n")
 
-                if 400 <= res.status_code < 600:
-                    self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
-                    self.logger.error("Not sure what to do. Just saying.")
-                    #self.logger.error(res.content)
 
 
-                if res.status_code is 501:
+
+
+                if res.status_code is 501 or res.status_code is 403:
                     self.logger.error("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
                     if attempts_error_status_code > 0:
                         self.logger.error("Trying to solve by logging in.")
@@ -124,8 +122,13 @@ class Fetcher:
                         continue
                     else:
                         self.logger.error("Already tried all attempts. Giving up.")
+                        self.db.set_login_broken(self.username)
                         raise Exception("Got status error too many times. Giving up. %s, reason: %s."  % (res.status_code, res.reason))
 
+                elif 400 <= res.status_code < 600:
+                    self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
+                    self.logger.error("Not sure what to do. Just saying.")
+                    #self.logger.error(res.content)
 
                 if len(html.fromstring(res.content).xpath("//input[@value='guest']")) > 0 or len(
                     html.fromstring(res.content).xpath("//input[@value='Log in']")) > 0:
