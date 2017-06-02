@@ -17,7 +17,7 @@ from os import system as system_call       # Execute a shell command
 from lxml import html
 from lxml import etree
 
-#from database import Database
+from database import Database
 
 
 short_pause_min = 5
@@ -35,7 +35,7 @@ class Fetcher:
         self.timeout = timeout
 
         #Connect to database.
-#        self.db = Database("stormfront")
+        self.db = Database("stormfront")
 
 
         self.scraper = cfscrape.create_scraper()
