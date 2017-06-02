@@ -416,7 +416,7 @@ class Fetcher:
                 #dateparse = datetime.datetime.strptime(datestr,"%m-%d-%Y, %I:%M %p")
 
                 fullmessage = message.xpath(".//*[starts-with(@id,'post_message_')]")[0]
-                fullmessagehtml = etree.tostring(fullmessage,encoding='UTF-8')
+                fullmessagehtml = etree.tostring(fullmessage,encoding='UTF-8').decode("UTF-8")
                 cleanmessage = " ".join(fullmessage.xpath("./text()|./*[not(self::div)]//text()")).strip()
 
                 signature = " ".join(message.xpath(".//div[@class='hidesig']//text()")).strip()
@@ -430,7 +430,7 @@ class Fetcher:
                     hasquote = True
                     quoteofpostid = quote[0].attrib["href"].split("post")[1]
                     quoteofusername = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")[0]
-                    quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8')
+                    quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8').decode("UTF-8")
                     quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
 
 

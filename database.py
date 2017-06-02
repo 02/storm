@@ -18,10 +18,23 @@ class Database:
         self.db.post.drop()
         self.db.thread.drop()
         self.db.user.drop()
+        self.db.forum.drop()
+        self.db.friend.drop()
 
     def drop_login_and_proxy(self):
         self.db.login.drop()
         self.db.proxy.drop()
+
+
+    def create_indexes(self):
+
+        self.db.forum.create_index({"id": 1}, {'unique': True})
+        self.db.friend.create_index({"id1": 1,"id2":1}, {'unique': True})
+        self.db.post.create_index({"id": 1}, {'unique': True})
+        self.db.thread.create_index({"id": 1}, {'unique': True})
+        self.db.user.create_index({"id": 1}, {'unique': True})
+        self.db.login.create_index({"username": 1}, {'unique': True})
+        self.db.proxy.create_index({"ip": 1}, {'unique': True})
 
     ## LOGIN AND PROXY MANAGEMENT
 

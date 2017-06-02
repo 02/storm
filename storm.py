@@ -121,15 +121,15 @@ def print_instructions():
     print("--clean-data \t\t\t Removes all scraped data.")
     print("--clean-login \t\t\t Removes all logins and proxies.")
     print("--start-get-users <from_id> <to_id> \t\t\t Start download of users.")
-
-    print("--populate-threads <from_id> <to_id> \t\t\t Set user ids to download.")
+    print()
+    print("--populate-users <from_id> <to_id> \t\t\t Set user ids to download.")
     print("--get-users \t\t\t Continue user download. All users in parallel.")
     print("--get-users-single \t\t\t Continue user download. Single thread.")
-
+    print()
     print("--populate-threads <from_id> <to_id> \t\t\t Set threads to download.")
     print("--get-threads-single \t\t\t Continue previous user download.")
     print("--get-threads-parallel \t\t\t Continue previous user download.")
-
+    print()
     print("--add-proxy <IP> \t\t\t Add proxy to proxy list.")
     print("--add-login <username> <password> \t\t\t Add new user to login list.")
     print("--monitor-new-posts \t\t\t Continuously scrape new posts. NOT YET IMPLEMENTED.")
@@ -158,12 +158,14 @@ def main():
     db.set_all_threads_not_used()
     db.set_all_users_not_used()
 
+
    # print(command,sys.argv[2].strip())
 
     if command == "--clean-data":
         if query_yes_no("Are you sure you want to empty database?", "no"):
             print('Cleaning database...')
             db.drop_all_data()
+            db.create_indexes()
         else:
             print("Leaving database intact.")
 
