@@ -227,19 +227,19 @@ class Fetcher:
         res.raise_for_status()
 
     def fetch_all_users(self):
-        print("Beginning user download...")
+        self.logger.info("Beginning user download...")
         user_id = self.db.pop_user()
         while user_id is not None:
-            print("Scraping user %s..." % user_id)
+            self.logger.info("Scraping user %s..." % user_id)
 
-            fetch.get_user_friendlist(user_id)
-            fetch.get_user_info(user_id)
+            self.get_user_friendlist(user_id)
+            self.get_user_info(user_id)
 
-            print("Taking short rest...")
+            self.logger.info("Taking short rest...")
             Fetcher.short_pause()
             user_id = self.db.pop_user()
 
-        print("User scraping completed.")
+        self.logger.info("User scraping completed.")
 
     def get_user_friendlist(self, userid):
         params = {
@@ -332,19 +332,19 @@ class Fetcher:
         self.logger.info("### Beginning thread download with user %s..." % self.username)
         thread_id = self.db.pop_thread()
         while thread_id is not None:
-            print("## %s Scraping thread %s..." % (self.username, thread_id))
+            self.logger.info("## %s Scraping thread %s..." % (self.username, thread_id))
 
             page = 1
             has_more_pages = True
             while has_more_pages:
-                print("# %s Scraping thread %s, page %s... " % (self.username, thread_id, page))
-                has_more_pages = fetch.fetch_thread_page(thread_id, page)
+                self.logger.info("# %s Scraping thread %s, page %s... " % (self.username, thread_id, page))
+                has_more_pages = self.fetch_thread_page(thread_id, page)
                 page += 1
                 Fetcher.short_pause()
 
                 thread_id = self.db.pop_thread()
 
-        print("Thread scraping completed.")
+        self.logger.info("Thread scraping completed.")
 
 
 

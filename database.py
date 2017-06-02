@@ -157,7 +157,6 @@ class Database:
 
     ## Posts
     def add_post(self,pid,data):
-        print("Adding post ", pid, " to database")
         data['inserted'] = datetime.utcnow()
         result = self.db.post.update({"id": pid}, data, True)
 
