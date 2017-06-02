@@ -17,7 +17,7 @@ from os import system as system_call       # Execute a shell command
 from lxml import html
 from lxml import etree
 
-from database import Database
+#from database import Database
 
 
 short_pause_min = 5
@@ -35,7 +35,7 @@ class Fetcher:
         self.timeout = timeout
 
         #Connect to database.
-        self.db = Database("stormfront")
+#        self.db = Database("stormfront")
 
 
         self.scraper = cfscrape.create_scraper()
@@ -142,8 +142,11 @@ class Fetcher:
                 success = True
                 return res
 
+            except KeyboardInterrupt:
+                raise
+
             #except requests.exceptions.RequestException:
-            except requests.exceptions.Exception:
+            except:
 
                 self.logger.error("WARNING: Post failed. Trying ping...")
 
@@ -156,8 +159,6 @@ class Fetcher:
                     self.logger.error("No reponse. Probably SF or internet that's down. Resting and then trying again.")
                     time.sleep(random.randint(60,240))
 
-            except KeyboardInterrupt:
-                raise
 
 
 
@@ -276,15 +277,15 @@ class Fetcher:
         tree = html.fromstring(r.content)
 
 
-        names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
+        #names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
+        names = tree.xpath("//td[@id='username_box']")
 
         if len(names) == 0:
             self.logger.info("WARNING: Failed getting user id %s" % userid)
             self.db.set_user_failed(userid)
 
         else:
-            name = names[0]
-
+            name = Fetcher.clean_text_string(etree.tostring(names[0], method='text', encoding='UTF-8').decode("UTF-8"))
 
             profiles = tree.xpath('//div[@id="collapseobj_aboutme"]')
             profiletext,profiletextonly = "",""
@@ -452,10 +453,12 @@ class Fetcher:
 
 if __name__ == '__main__':
     fetch = Fetcher("wickedness","tintolito","86.62.108.219:53281")
+
     fetch.login()
+    fetch.get_user_info(288029)
     #fetch.fetch_thread_page(1213459,1)
-    fetch.get_user_friendlist(1)
-    fetch.fetch_thread_page(1213459, 1)
+    #fetch.get_user_friendlist(1)
+    #fetch.fetch_thread_page(1213459, 1)
     # fetch.get_user_friendlist(2)
     # fetch.get_user_friendlist(3)
     # fetch.get_user_friendlist(4)
