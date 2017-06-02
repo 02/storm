@@ -66,6 +66,12 @@ class Database:
     def set_login_broken(self,username):
         self.db.login.update({'username': username}, {'$set': {'broken': True, 'broke_time': datetime.utcnow()}})
 
+    def set_user_not_processed(self,uid):
+        self.db.user.update({'id': uid}, {'$set': {'status': 0}})
+
+    def set_thread_not_processed(self, tid):
+        self.db.thread.update({'id': tid}, {'$set': {'status': 0}})
+
     def set_all_logins_not_used(self):
         self.db.login.update({}, {'$set': {'used': None}})
 
