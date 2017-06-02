@@ -284,12 +284,12 @@ class Fetcher:
             ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
             profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
-            profiletext = etree.tostring(profile).encode('utf-8')
-            ministattext = etree.tostring(ministat).encode('utf-8')
+            profiletext = etree.tostring(profile,encoding='UTF-8')
+            ministattext = etree.tostring(ministat,encoding='UTF-8')
 
             #Clean out multiple line breaks and whitespaces
-            profiletextonly = Fetcher.clean_text_string( etree.tostring(profile, method='text').encode('utf-8') )
-            ministattextonly = Fetcher.clean_text_string( etree.tostring(ministat, method='text').encode('utf-8') )
+            profiletextonly = Fetcher.clean_text_string( etree.tostring(profile, method='text',encoding='UTF-8') )
+            ministattextonly = Fetcher.clean_text_string( etree.tostring(ministat, method='text',encoding='UTF-8') )
 
             # print("name", name)
             # print("ministat", ministat)
@@ -416,7 +416,7 @@ class Fetcher:
                 #dateparse = datetime.datetime.strptime(datestr,"%m-%d-%Y, %I:%M %p")
 
                 fullmessage = message.xpath(".//*[starts-with(@id,'post_message_')]")[0]
-                fullmessagehtml = etree.tostring(fullmessage)
+                fullmessagehtml = etree.tostring(fullmessage,encoding='UTF-8')
                 cleanmessage = " ".join(fullmessage.xpath("./text()|./*[not(self::div)]//text()")).strip()
 
                 signature = " ".join(message.xpath(".//div[@class='hidesig']//text()")).strip()
@@ -430,7 +430,7 @@ class Fetcher:
                     hasquote = True
                     quoteofpostid = quote[0].attrib["href"].split("post")[1]
                     quoteofusername = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")[0]
-                    quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0])
+                    quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8')
                     quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
 
 
