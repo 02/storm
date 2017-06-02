@@ -341,7 +341,7 @@ class Fetcher:
                 parentid = None
                 for fi in range(1, len(forums)):
                     forumid = forums[fi].attrib["href"].split("/forum/f")[1][:-1]
-                    forumtitle = forums[1].xpath("span/text()")[0]
+                    forumtitle = forums[fi].xpath("span/text()")[0]
 
                     data = {'id': forumid, 'title': forumtitle, 'parent': parentid}
                     self.db.add_forum(forumid,data)
@@ -353,7 +353,7 @@ class Fetcher:
                 threaddate = ''.join(messages[0].xpath('.//td[@class="thead"][1]/text()')).strip()
                 threaddateparse = Fetcher.parse_date(threaddate)
 
-                data = {'title': threadtitle, 'forum': parentid, 'createdate': threaddateparse, 'createdatestr': threaddate  }
+                data = {'id': tid, 'title': threadtitle, 'forum': parentid, 'createdate': threaddateparse, 'createdatestr': threaddate  }
                 self.db.add_thread(tid,data)
 
 
