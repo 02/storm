@@ -142,7 +142,9 @@ class Fetcher:
                 success = True
                 return res
 
-            except requests.exceptions.RequestException:
+            #except requests.exceptions.RequestException:
+            except requests.exceptions.Exception:
+
                 self.logger.error("WARNING: Post failed. Trying ping...")
 
                 if self.ping("www.stormfront.org"):
@@ -153,6 +155,9 @@ class Fetcher:
                     #No ping, probably internet or SF that's down. Long rest then try again!
                     self.logger.error("No reponse. Probably SF or internet that's down. Resting and then trying again.")
                     time.sleep(random.randint(60,240))
+
+            except KeyboardInterrupt:
+                raise
 
 
 
