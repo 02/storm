@@ -284,12 +284,12 @@ class Fetcher:
             ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
             profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
-            profiletext = etree.tostring(profile,encoding='UTF-8').encode("UTF-8")
-            ministattext = etree.tostring(ministat,encoding='UTF-8').encode("UTF-8")
+            profiletext = etree.tostring(profile,encoding='UTF-8').decode("UTF-8")
+            ministattext = etree.tostring(ministat,encoding='UTF-8').decode("UTF-8")
 
             #Clean out multiple line breaks and whitespaces
-            profiletextonly = Fetcher.clean_text_string( etree.tostring(profile, method='text',encoding='UTF-8').encode("UTF-8") )
-            ministattextonly = Fetcher.clean_text_string( etree.tostring(ministat, method='text',encoding='UTF-8').encode("UTF-8") )
+            profiletextonly = Fetcher.clean_text_string( etree.tostring(profile, method='text',encoding='UTF-8').decode("UTF-8") )
+            ministattextonly = Fetcher.clean_text_string( etree.tostring(ministat, method='text',encoding='UTF-8').decode("UTF-8") )
 
             # print("name", name)
             # print("ministat", ministat)
