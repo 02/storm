@@ -275,7 +275,7 @@ class Fetcher:
         names = tree.xpath('//*[@id="username_box"]/h1//*/text()')
 
         if len(names) == 0:
-            print("WARNING: Failed getting user id %s" % userid)
+            self.logger.info("WARNING: Failed getting user id %s" % userid)
             self.db.set_user_failed(userid)
 
         else:
@@ -284,18 +284,18 @@ class Fetcher:
             ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
             profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
-            profiletext = str(etree.tostring(profile))
-            ministattext = str(etree.tostring(ministat))
+            profiletext = etree.tostring(profile).encode('utf-8')
+            ministattext = etree.tostring(ministat).encode('utf-8')
 
             #Clean out multiple line breaks and whitespaces
-            profiletextonly = Fetcher.clean_text_string(str(etree.tostring(profile, method='text')))
-            ministattextonly = Fetcher.clean_text_string(str(etree.tostring(ministat, method='text')))
+            profiletextonly = Fetcher.clean_text_string( etree.tostring(profile, method='text').encode('utf-8') )
+            ministattextonly = Fetcher.clean_text_string( etree.tostring(ministat, method='text').encode('utf-8') )
 
-            print("name", name)
-            print("ministat", ministat)
-            print("profile", profile)
-            print("ministattext", ministattextonly)
-            print("profiletext", profiletextonly)
+            # print("name", name)
+            # print("ministat", ministat)
+            # print("profile", profile)
+            # print("ministattext", ministattextonly)
+            # print("profiletext", profiletextonly)
 
             data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
                     'ministattext': profiletextonly, 'profiletext': ministattextonly}
@@ -373,7 +373,7 @@ class Fetcher:
         #Does thread exist?
         if "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).count("No Thread specified.") > 0:
             #thread does not exist
-            print("No such thread")
+            self.logger.warning("No such thread")
             self.db.thread_failed(tid)
             return False
 
