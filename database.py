@@ -28,13 +28,14 @@ class Database:
 
     def create_indexes(self):
 
-        self.db.forum.create_index({"id": 1}, {'unique': True})
-        self.db.friend.create_index({"id1": 1,"id2":1}, {'unique': True})
-        self.db.post.create_index({"id": 1}, {'unique': True})
-        self.db.thread.create_index({"id": 1}, {'unique': True})
-        self.db.user.create_index({"id": 1}, {'unique': True})
-        self.db.login.create_index({"username": 1}, {'unique': True})
-        self.db.proxy.create_index({"ip": 1}, {'unique': True})
+        self.db.forum.create_index([("id", pymongo.ASCENDING)], unique=True)
+        self.db.post.create_index([("id", pymongo.ASCENDING)], unique=True)
+        self.db.thread.create_index([("id", pymongo.ASCENDING)], unique=True)
+        self.db.user.create_index([("id", pymongo.ASCENDING)], unique=True)
+        self.db.login.create_index([("username", pymongo.ASCENDING)], unique=True)
+        self.db.proxy.create_index([("ip", pymongo.ASCENDING)], unique=True)
+        self.db.friend.create_index([("id1", pymongo.ASCENDING), ("id2", pymongo.ASCENDING)], unique=True)
+
 
     ## LOGIN AND PROXY MANAGEMENT
 
