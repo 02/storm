@@ -281,21 +281,21 @@ class Fetcher:
         else:
             name = names[0]
 
-            ministat = tree.xpath('//div[@id="collapseobj_stats_mini"]')[0]
-            profile = tree.xpath('//div[@id="collapseobj_aboutme"]')[0]
 
-            profiletext = etree.tostring(profile,encoding='UTF-8').decode("UTF-8")
-            ministattext = etree.tostring(ministat,encoding='UTF-8').decode("UTF-8")
+            profiles = tree.xpath('//div[@id="collapseobj_aboutme"]')
+            profiletext,profiletextonly = "",""
+            if len(profiles)>0:
+                profile = profiles[0]
+                profiletext = etree.tostring(profile,encoding='UTF-8').decode("UTF-8")
+                profiletextonly = Fetcher.clean_text_string(etree.tostring(profile, method='text', encoding='UTF-8').decode("UTF-8"))
 
-            #Clean out multiple line breaks and whitespaces
-            profiletextonly = Fetcher.clean_text_string( etree.tostring(profile, method='text',encoding='UTF-8').decode("UTF-8") )
-            ministattextonly = Fetcher.clean_text_string( etree.tostring(ministat, method='text',encoding='UTF-8').decode("UTF-8") )
 
-            # print("name", name)
-            # print("ministat", ministat)
-            # print("profile", profile)
-            # print("ministattext", ministattextonly)
-            # print("profiletext", profiletextonly)
+            ministats = tree.xpath('//div[@id="collapseobj_stats_mini"]')
+            ministattext,ministattextonly = "",""
+            if len(ministats) > 0:
+                ministat = ministats[0]
+                ministattext = etree.tostring(ministat,encoding='UTF-8').decode("UTF-8")
+                ministattextonly = Fetcher.clean_text_string(etree.tostring(ministat, method='text', encoding='UTF-8').decode("UTF-8"))
 
             data = {'id': userid, 'name': name, 'ministat': profiletext, 'profile': ministattext,
                     'ministattext': profiletextonly, 'profiletext': ministattextonly}

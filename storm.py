@@ -153,8 +153,10 @@ def main():
     global db
     db = database.Database("stormfront")
 
+    #Reset all interrupted processes and logins etc.
     db.set_all_logins_not_used()
-
+    db.set_all_threads_not_used()
+    db.set_all_users_not_used()
 
    # print(command,sys.argv[2].strip())
 
@@ -205,8 +207,6 @@ def main():
 
         # Add to thread database all number between fromid to toid.
         db.populate_threads_to_be_fetched(int(sys.argv[2]), int(sys.argv[3]))
-
-
 
 
 

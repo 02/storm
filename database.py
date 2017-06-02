@@ -129,6 +129,9 @@ class Database:
         data['status'] = 2
         result = self.db.thread.update({"id": tid}, data, True)
 
+    #If we got interrupted halfway before, we'll start over with them when we restart
+    def set_all_threads_not_used(self):
+        result = self.db.thread.update({"status": 1}, {'$set': {'status': 0}})
 
     def thread_completed(self,tid):
         result = self.db.thread.update({"id": tid}, {'$set': {'status': 2, 'completed': datetime.utcnow()}})
@@ -169,6 +172,9 @@ class Database:
     # User:
     # id,username,inserted, ..
     # status: 0 - non-processed, 1 - under processing, -1 error, 2 processed
+
+    def set_all_users_not_used(self):
+        result = self.db.user.update({"status": 1}, {'$set': {'status': 0}})
 
     def pop_user(self):
         nr = self.db.user.find({'status': 0}).count()
