@@ -8,41 +8,27 @@ import time
 import database
 import fetcher
 
-short_pause_min = 5
-short_pause_max = 10
-long_pause_min = 30
-long_pause_max = 60
-
 db = None
 
 
-def short_pause():
-    time.sleep(random.randint(short_pause_min,short_pause_max))
-
-
-def long_pause():
-    time.sleep(random.randint(long_pause_min,long_pause_max))
-
-def fetch_all_users():
-
+def fetch_all_users_single():
     login = db.pop_login()
-    fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+    fetch_all_users(login['username'], login['password'], login['proxy'])
+
+def fetch_all_users_parallel():
+    logins = db.get_all_login()
+    jobs = []
+    for login in logins:
+        p = multiprocessing.Process(target=fetch_all_users, args=(login['username'],login['password'],login['proxy']))
+        jobs.append(p)
+        p.start()
+
+    print("Out of loop.")
+
+def fetch_all_users(username,password,proxy):
+    fetch = fetcher.Fetcher(username, password, proxy)
     fetch.login()
-
-    print("Beginning user download...")
-    user_id = db.pop_user()
-    while user_id is not None:
-        print("Scraping user %s..." % user_id)
-
-        fetch.get_user_friendlist(user_id)
-        fetch.get_user_info(user_id)
-
-        print("Taking short rest...")
-        short_pause()
-        user_id = db.pop_user()
-
-    print("User scraping completed.")
-
+    fetch.fetch_all_users()
 
 
 def fetch_all_threads_parallel():
@@ -60,29 +46,11 @@ def fetch_all_thread_single():
     login = db.pop_login()
     fetch_all_threads(login['username'], login['password'], login['proxy'])
 
-def fetch_all_threads(username, password, proxy):
 
-    #login = db.pop_login()
-    #fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+def fetch_all_threads(username,password,proxy):
     fetch = fetcher.Fetcher(username, password, proxy)
     fetch.login()
-
-    print("### Beginning thread download with user %s..." % username)
-    thread_id = db.pop_thread()
-    while thread_id is not None:
-        print("## %s Scraping thread %s..." % (username, thread_id))
-
-        page = 1
-        has_more_pages = True
-        while has_more_pages:
-            print("# %s Scraping thread %s, page %s... " % (username, thread_id, page))
-            has_more_pages = fetch.fetch_thread_page(thread_id, page)
-            page += 1
-            short_pause()
-
-            thread_id = db.pop_thread()
-
-    print("Thread scraping completed.")
+    fetch.fetch_all_threads()
 
     #
     # login = db.pop_login()
@@ -154,7 +122,9 @@ def print_instructions():
     print("--clean-login \t\t\t Removes all logins and proxies.")
     print("--start-get-users <from_id> <to_id> \t\t\t Start download of users.")
 
-    print("--continue-get-users \t\t\t Continue previous user download.")
+    print("--populate-threads <from_id> <to_id> \t\t\t Set user ids to download.")
+    print("--get-users \t\t\t Continue user download. All users in parallel.")
+    print("--get-users-single \t\t\t Continue user download. Single thread.")
 
     print("--populate-threads <from_id> <to_id> \t\t\t Set threads to download.")
     print("--get-threads-single \t\t\t Continue previous user download.")
@@ -202,27 +172,31 @@ def main():
         else:
             print("Leaving database intact.")
 
-    elif command == "--start-get-users":
+    elif command == "--populate-users":
         if len(sys.argv) != 4:
             print_instructions()
             exit()
-
         print("Populating user database...")
-
         db.populate_users_to_be_fetched(int(sys.argv[2]),int(sys.argv[3]))
-        fetch_all_users()
+
+    elif command == "--get-users":
+        print("Continuing user download parallelized...")
+        fetch_all_users_parallel()
+
+    elif command == "--get-users-single":
+        print("Continuing user download single thread...")
+        fetch_all_users_single()
 
 
     elif command == "--get-threads-single":
         print("Continuing thread download...")
         fetch_all_thread_single()
 
-    elif command == "--get-threads-parallel":
+    elif command == "--get-threads":
         print("Continuing thread download...")
         fetch_all_threads_parallel()
 
     elif command == "--populate-threads":
-
         if len(sys.argv) != 4:
             print_instructions()
             exit()
@@ -233,11 +207,8 @@ def main():
         db.populate_threads_to_be_fetched(int(sys.argv[2]), int(sys.argv[3]))
 
 
-    elif command == "--continue-get-users":
 
-        print("Continuing user download...")
 
-        fetch_all_users()
 
     elif command == "--add-proxy":
 

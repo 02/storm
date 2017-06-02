@@ -20,6 +20,11 @@ from lxml import etree
 from database import Database
 
 
+short_pause_min = 5
+short_pause_max = 10
+long_pause_min = 30
+long_pause_max = 60
+
 
 class Fetcher:
 
@@ -44,6 +49,13 @@ class Fetcher:
         self.logger.addHandler(hdlr)
         self.logger.setLevel(logging.INFO)
 
+    @staticmethod
+    def short_pause():
+        time.sleep(random.randint(short_pause_min, short_pause_max))
+
+    @staticmethod
+    def long_pause():
+        time.sleep(random.randint(long_pause_min, long_pause_max))
 
     def set_proxy(self, proxy):
         if proxy is not None:
@@ -214,6 +226,20 @@ class Fetcher:
 
         res.raise_for_status()
 
+    def fetch_all_users(self):
+        print("Beginning user download...")
+        user_id = self.db.pop_user()
+        while user_id is not None:
+            print("Scraping user %s..." % user_id)
+
+            fetch.get_user_friendlist(user_id)
+            fetch.get_user_info(user_id)
+
+            print("Taking short rest...")
+            Fetcher.short_pause()
+            user_id = self.db.pop_user()
+
+        print("User scraping completed.")
 
     def get_user_friendlist(self, userid):
         params = {
@@ -298,6 +324,27 @@ class Fetcher:
             # 05-29-2017, 01:41 PM
             return datetime.datetime.strptime(datestr, "%m-%d-%Y, %I:%M %p")
 
+    def fetch_all_threads(self):
+
+        # login = db.pop_login()
+        # fetch = fetcher.Fetcher(login['username'], login['password'], login['proxy'])
+
+        self.logger.info("### Beginning thread download with user %s..." % self.username)
+        thread_id = self.db.pop_thread()
+        while thread_id is not None:
+            print("## %s Scraping thread %s..." % (self.username, thread_id))
+
+            page = 1
+            has_more_pages = True
+            while has_more_pages:
+                print("# %s Scraping thread %s, page %s... " % (self.username, thread_id, page))
+                has_more_pages = fetch.fetch_thread_page(thread_id, page)
+                page += 1
+                Fetcher.short_pause()
+
+                thread_id = self.db.pop_thread()
+
+        print("Thread scraping completed.")
 
 
 
