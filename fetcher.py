@@ -109,12 +109,8 @@ class Fetcher:
                 self.logger.info(res.content)
                 self.logger.info("\n\n\n\n")
 
-
-
-
-
-                if res.status_code is 501 or res.status_code is 403:
-                    self.logger.error("WARNING: Got error status code: %s, reason: %s."  % (res.status_code, res.reason))
+                if res.status_code == 501 or res.status_code == 403:
+                    self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
                     if attempts_error_status_code > 0:
                         self.logger.error("Trying to solve by logging in.")
                         self.login()
