@@ -282,7 +282,7 @@ class Fetcher:
 
         if len(names) == 0:
             self.logger.info("WARNING: Failed getting user id %s" % userid)
-            self.db.set_user_failed(userid)
+            self.db.set_user_failed(userid,r.status_code)
 
         else:
             name = Fetcher.clean_text_string(etree.tostring(names[0], method='text', encoding='UTF-8').decode("UTF-8"))

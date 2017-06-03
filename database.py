@@ -216,8 +216,8 @@ class Database:
     def set_user_processing(self,uid):
         result = self.db.user.update({"id": uid}, {'$set': {'processing_started': datetime.utcnow(), 'status': 1}})
 
-    def set_user_failed(self,uid):
-        result = self.db.user.update({"id": uid}, {'$set': {'processing_finished': datetime.utcnow(), 'status': -1}})
+    def set_user_failed(self,uid,status_code):
+        result = self.db.user.update({"id": uid}, {'$set': {'processing_finished': datetime.utcnow(), 'status': -1, 'error_code': status_code}})
 
     def populate_users_to_be_fetched(self, fromnr, tonr):
         # Add all
