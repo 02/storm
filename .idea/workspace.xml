@@ -32,8 +32,8 @@
       <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="42" column="23" lean-forward="true" selection-start-line="42" selection-start-column="23" selection-end-line="42" selection-end-column="23" />
+            <state relative-caret-position="31">
+              <caret line="156" column="32" lean-forward="false" selection-start-line="156" selection-start-column="32" selection-end-line="156" selection-end-column="32" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -64,10 +64,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print()</find>
-      <find>info()</find>
-      <find>info(</find>
-      <find>db.</find>
       <find>self.db</find>
       <find>single</find>
       <find>continue-t</find>
@@ -79,7 +75,6 @@
       <find>post</find>
       <find>print</find>
       <find>warning: faie</find>
-      <find>print(</find>
       <find>str(</find>
       <find>etree.tostring</find>
       <find>collapseobj_aboutme</find>
@@ -94,6 +89,11 @@
       <find>failed get</find>
       <find>method=</find>
       <find>xxx</find>
+      <find>print(</find>
+      <find>sleep</find>
+      <find>got logged</find>
+      <find>ping</find>
+      <find>ping(</find>
     </findStrings>
     <replaceStrings>
       <replace>datetime.now()</replace>
@@ -549,8 +549,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="42" column="23" lean-forward="true" selection-start-line="42" selection-start-column="23" selection-end-line="42" selection-end-column="23" />
+        <state relative-caret-position="31">
+          <caret line="156" column="32" lean-forward="false" selection-start-line="156" selection-start-column="32" selection-end-line="156" selection-end-column="32" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>

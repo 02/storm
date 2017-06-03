@@ -20,8 +20,8 @@ from lxml import etree
 from database import Database
 
 
-short_pause_min = 5
-short_pause_max = 10
+short_pause_min = 1
+short_pause_max = 3
 long_pause_min = 30
 long_pause_max = 60
 
@@ -74,6 +74,7 @@ class Fetcher:
 
         self.set_proxy(new_proxy)
 
+    @staticmethod
     def ping(host):
         """
         Returns True if host (str) responds to a ping request.
@@ -137,7 +138,7 @@ class Fetcher:
                         continue
                     else:
                         self.logger.error("Already tried all attempts. Giving up.")
-                        raise Exception("Got logged out too many times. Giving up.")
+                        raise Exception("Thread %s got logged out too many times. Giving up." % self.username)
 
                 success = True
                 return res
@@ -150,15 +151,14 @@ class Fetcher:
 
                 self.logger.error("WARNING: Post failed. Trying ping...")
 
-                if self.ping("www.stormfront.org"):
+                if Fetcher.ping("www.stormfront.org"):
                     #Ping without using proxy. If works, it is probably the proxy that's fucked. Change proxy.
                     self.logger.error("Got response from ping. Probably proxy that's down. Trying another.")
                     self.try_another_proxy()
                 else:
                     #No ping, probably internet or SF that's down. Long rest then try again!
                     self.logger.error("No reponse. Probably SF or internet that's down. Resting and then trying again.")
-                    time.sleep(random.randint(60,240))
-
+                    Fetcher.long_pause()
 
 
 
