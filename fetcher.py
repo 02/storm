@@ -168,7 +168,7 @@ class Fetcher:
     def login(self):
 
         #Spread out connections a bit
-        time.sleep(0,20)
+        time.sleep(random.randint(0, 15))
         self.logger.info("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
