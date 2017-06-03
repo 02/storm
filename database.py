@@ -73,7 +73,7 @@ class Database:
         self.db.thread.update({'id': tid}, {'$set': {'status': 0}})
 
     def set_all_logins_not_used(self):
-        self.db.login.update({}, {'$set': {'used': None}})
+        self.db.login.update({}, {'$set': {'used': None}},{'multi': True})
 
     def push_login(self, username, password):
         data = {"username":username,"password":password,"used": None, "proxy": None}
@@ -99,7 +99,7 @@ class Database:
             logins.append(login)
 
         # Set used
-        self.db.login.update({}, {'$set': {'used': datetime.utcnow()}})
+        self.db.login.update({}, {'$set': {'used': datetime.utcnow()}},{'multi': True})
 
         return logins
 

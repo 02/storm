@@ -120,7 +120,7 @@ class Fetcher:
                     else:
                         self.logger.error("Already tried all attempts. Giving up.")
                         self.db.set_login_broken(self.username)
-                        raise Exception("Got status error too many times. Giving up. %s, reason: %s."  % (res.status_code, res.reason))
+                        raise RuntimeError("Got status error too many times. Giving up. %s, reason: %s."  % (res.status_code, res.reason))
 
                 elif 400 <= res.status_code < 600:
                     self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
@@ -138,12 +138,15 @@ class Fetcher:
                         continue
                     else:
                         self.logger.error("Already tried all attempts. Giving up.")
-                        raise Exception("Thread %s got logged out too many times. Giving up." % self.username)
+                        raise RuntimeError("Thread %s got logged out too many times. Giving up." % self.username)
 
                 success = True
                 return res
 
             except KeyboardInterrupt:
+                raise
+
+            except RuntimeError:
                 raise
 
             #except requests.exceptions.RequestException:
@@ -164,6 +167,8 @@ class Fetcher:
 
     def login(self):
 
+        #Spread out connections a bit
+        time.sleep(0,20)
         self.logger.info("Attempting to by-pass CloudFare bot control...")
         #print(self.scraper.get("https://www.stormfront.org").content)
 
