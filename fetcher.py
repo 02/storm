@@ -468,10 +468,14 @@ class Fetcher:
                     title = titlem[0]
 
 
-                quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
+
+
                 hasquote = False
                 quoteofpostid, quoteofusername,quotehtml,quotetxt  = None,None,None,None
-                if len(quote) > 0:
+                #if len(quote) > 0:
+                quotetop = fullmessage.xpath(".//div/table//tr/td/div[1]/text()")
+                if len(quotetop) > 0 and quotetop[0].lower().count("originally posted by"):
+                    quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
                     hasquote = True
                     if quote[0].attrib["href"].count("post") == 0:
                         #This is a quote of a newspaper or something else, not from a user. We don't treat it as a quote
@@ -485,8 +489,15 @@ class Fetcher:
                         else:
                             quoteofusername = quoteofusernames[0]
 
-                        quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8').decode("UTF-8")
-                        quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
+                        quotehtmls = fullmessage.xpath(".//div/table//tr/td/div[2]")
+
+                        if len(quotehtmls) == 0:
+                            self.logger.warning("Looks like quote, but can't find it. Just gonna skip it.")
+                            hasquote = False
+
+                        else:
+                            quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8').decode("UTF-8")
+                            quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
 
 
                 #ADD TO DATABASE
@@ -495,8 +506,8 @@ class Fetcher:
                         'title': title, 'hasquote': hasquote, 'quoteofpostid': quoteofpostid, 'quoteofusername': quoteofusername,
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
-                #pprint.pprint(data)
-                self.db#.add_post(messageid, data)
+                pprint.pprint(data)
+                self.db.add_post(messageid, data)
 
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0
@@ -506,7 +517,7 @@ if __name__ == '__main__':
 
     fetch.login()
     #fetch.get_user_info(288029)
-    fetch.fetch_thread_page(385951,1)
+    fetch.fetch_thread_page(1170137,1)
     #fetch.get_user_friendlist(1)
     #fetch.fetch_thread_page(1213459, 1)
     # fetch.get_user_friendlist(2)
