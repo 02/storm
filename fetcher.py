@@ -473,15 +473,16 @@ class Fetcher:
                 hasquote = False
                 quoteofpostid, quoteofusername,quotehtml,quotetxt  = None,None,None,None
                 #if len(quote) > 0:
+                quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
                 quotetop = fullmessage.xpath(".//div/table//tr/td/div[1]/text()")
-                if len(quotetop) > 0 and quotetop[0].lower().count("originally posted by"):
-                    quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
+                if len(quotetop) > 0 and quotetop[0].lower().count("originally posted by") and len(quote) > 0:
+
                     hasquote = True
                     if quote[0].attrib["href"].count("post") == 0:
                         #This is a quote of a newspaper or something else, not from a user. We don't treat it as a quote
                         hasquote = False
                     else:
-                        quoteofpostid = quote[0].attrib["href"].split("post")[1] ####
+                        quoteofpostid = quote[0].attrib["href"].split("post")[1]
                         quoteofusernames = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")
                         if len(quoteofusernames) == 0:
                             quoteofusername = ""
@@ -506,7 +507,7 @@ class Fetcher:
                         'title': title, 'hasquote': hasquote, 'quoteofpostid': quoteofpostid, 'quoteofusername': quoteofusername,
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
-                pprint.pprint(data)
+                #pprint.pprint(data)
                 self.db.add_post(messageid, data)
 
             #Is there a next page?
