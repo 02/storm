@@ -461,7 +461,7 @@ class Fetcher:
                 cleanmessage = " ".join(fullmessage.xpath("./text()|./*[not(self::div)]//text()")).strip()
 
                 signature = " ".join(message.xpath(".//div[@class='hidesig']//text()")).strip()
-                titlem = message.xpath(".//td[@class='alt1']/div/strong/text()") ### sometimes fucks.
+                titlem = message.xpath(".//td[@class='alt1']/div/strong/text()")
                 if len(titlem) == 0:
                     title = ""
                 else:
@@ -473,10 +473,14 @@ class Fetcher:
                 quoteofpostid, quoteofusername,quotehtml,quotetxt  = None,None,None,None
                 if len(quote) > 0:
                     hasquote = True
-                    quoteofpostid = quote[0].attrib["href"].split("post")[1]
-                    quoteofusername = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")[0]
-                    quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8').decode("UTF-8")
-                    quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
+                    if quote[0].attrib["href"].count("post") == 0:
+                        #This is a quote of a newspaper or something else, not from a user. We don't treat it as a quote
+                        hasquote = False
+                    else:
+                        quoteofpostid = quote[0].attrib["href"].split("post")[1] ####
+                        quoteofusername = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")[0]
+                        quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8').decode("UTF-8")
+                        quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
 
 
                 #ADD TO DATABASE
@@ -496,7 +500,7 @@ if __name__ == '__main__':
 
     fetch.login()
     #fetch.get_user_info(288029)
-    fetch.fetch_thread_page(25952,1)
+    fetch.fetch_thread_page(862554,1)
     #fetch.get_user_friendlist(1)
     #fetch.fetch_thread_page(1213459, 1)
     # fetch.get_user_friendlist(2)
