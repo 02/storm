@@ -440,7 +440,18 @@ class Fetcher:
                 i = i + 1
 
                 messageid = message.attrib['id'].split('t')[1]
-                authorid = message.xpath('.//*[@class="bigusername"]')[0].attrib['href'].split('=')[1]
+
+
+                authorids = message.xpath('.//*[@class="bigusername"]')
+
+                if len(authorids) == 0:
+                    #No author id, probably guest user
+                    authorid = 0
+                    self.logger.warning("No author id found for post. Assuming guest user.")
+                else:
+                    authorid = authorids.attrib['href'].split('=')[1]
+
+
                 datestr = ''.join(message.xpath('.//td[@class="thead"][1]/text()')).strip()
                 dateparse = Fetcher.parse_date(datestr)
                 #dateparse = datetime.datetime.strptime(datestr,"%m-%d-%Y, %I:%M %p")
