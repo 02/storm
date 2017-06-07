@@ -478,7 +478,13 @@ class Fetcher:
                         hasquote = False
                     else:
                         quoteofpostid = quote[0].attrib["href"].split("post")[1] ####
-                        quoteofusername = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")[0]
+                        quoteofusernames = fullmessage.xpath(".//div/table//tr/td/div[1]/strong/text()")
+                        if len(quoteofusernames) == 0:
+                            quoteofusername = ""
+                            self.logger.warning("No username quoted, but looks like user quote. Assuming email based username,")
+                        else:
+                            quoteofusername = quoteofusernames[0]
+
                         quotehtml = etree.tostring(fullmessage.xpath(".//div/table//tr/td/div[2]")[0],encoding='UTF-8').decode("UTF-8")
                         quotetxt = " ".join(fullmessage.xpath(".//div/table//tr/td/div[2]//text()"))
 
@@ -490,7 +496,7 @@ class Fetcher:
                         'quotehtml': quotehtml,'quotetxt': quotetxt}
 
                 #pprint.pprint(data)
-                self.db.add_post(messageid, data)
+                self.db#.add_post(messageid, data)
 
             #Is there a next page?
             return len(tree.xpath("//td[@class='alt1']/a[@rel='next']")) > 0
@@ -500,7 +506,7 @@ if __name__ == '__main__':
 
     fetch.login()
     #fetch.get_user_info(288029)
-    fetch.fetch_thread_page(862554,1)
+    fetch.fetch_thread_page(385951,1)
     #fetch.get_user_friendlist(1)
     #fetch.fetch_thread_page(1213459, 1)
     # fetch.get_user_friendlist(2)
