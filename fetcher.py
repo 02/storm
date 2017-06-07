@@ -450,7 +450,11 @@ class Fetcher:
                 cleanmessage = " ".join(fullmessage.xpath("./text()|./*[not(self::div)]//text()")).strip()
 
                 signature = " ".join(message.xpath(".//div[@class='hidesig']//text()")).strip()
-                title = message.xpath(".//td[@class='alt1']/div/strong/text()")[0]
+                titlem = message.xpath(".//td[@class='alt1']/div/strong/text()") ### sometimes fucks.
+                if len(titlem) == 0:
+                    title = ""
+                else:
+                    title = titlem[0]
 
 
                 quote = fullmessage.xpath(".//div/table//tr/td/div[1]/a")
@@ -480,8 +484,8 @@ if __name__ == '__main__':
     fetch = Fetcher("wickedness","tintolito","86.62.108.219:53281")
 
     fetch.login()
-    fetch.get_user_info(288029)
-    #fetch.fetch_thread_page(1213459,1)
+    #fetch.get_user_info(288029)
+    fetch.fetch_thread_page(25952,1)
     #fetch.get_user_friendlist(1)
     #fetch.fetch_thread_page(1213459, 1)
     # fetch.get_user_friendlist(2)

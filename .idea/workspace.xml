@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4adc07b6-7cad-4f04-bcff-295c5e0807b7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database.py" afterPath="$PROJECT_DIR$/database.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fetcher.py" afterPath="$PROJECT_DIR$/fetcher.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,7 +20,7 @@
       <file leaf-file-name="storm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/storm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="827">
+            <state relative-caret-position="1889">
               <caret line="168" column="13" lean-forward="true" selection-start-line="168" selection-start-column="13" selection-end-line="168" selection-end-column="13" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -29,22 +29,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fetcher.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fetcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="858">
-              <caret line="408" column="28" lean-forward="true" selection-start-line="408" selection-start-column="28" selection-end-line="408" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-2329">
+              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
+            <state relative-caret-position="258">
               <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -64,9 +62,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>not</find>
-      <find>not surew</find>
-      <find>failed get</find>
       <find>method=</find>
       <find>xxx</find>
       <find>print(</find>
@@ -94,6 +89,9 @@
       <find>no longer</find>
       <find>pop_user</find>
       <find>thread</find>
+      <find>title = message.xpath(&quot;.//td[@class='alt1']/div/strong/text()&quot;)[0</find>
+      <find>self.db</find>
+      <find>##db##</find>
     </findStrings>
     <replaceStrings>
       <replace>datetime.now()</replace>
@@ -107,8 +105,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/storm.py" />
-        <option value="$PROJECT_DIR$/fetcher.py" />
         <option value="$PROJECT_DIR$/database.py" />
+        <option value="$PROJECT_DIR$/fetcher.py" />
       </list>
     </option>
   </component>
@@ -313,7 +311,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2869318" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2869318" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -360,7 +358,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="34" />
+      <option name="time" value="36" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -387,9 +385,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2769">
           <caret line="228" column="21" lean-forward="false" selection-start-line="228" selection-start-column="8" selection-end-line="228" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -435,9 +431,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="52">
           <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -455,9 +449,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -527,9 +519,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/storm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="827">
+        <state relative-caret-position="1889">
           <caret line="168" column="13" lean-forward="true" selection-start-line="168" selection-start-column="13" selection-end-line="168" selection-end-column="13" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
@@ -539,21 +541,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fetcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="858">
-          <caret line="408" column="28" lean-forward="true" selection-start-line="408" selection-start-column="28" selection-end-line="408" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-2329">
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
