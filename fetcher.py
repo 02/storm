@@ -66,13 +66,13 @@ class Fetcher:
         else:
             self.proxy = None
 
-
     def try_another_proxy(self):
         new_proxy = self.db.set_proxy_down_assign_new(self.proxy['http'], self.username)
         if new_proxy is None:
             raise Exception("Ran out of proxies! Giving up.")
 
         self.set_proxy(new_proxy)
+        self.login()
 
     @staticmethod
     def ping(host):
@@ -110,8 +110,10 @@ class Fetcher:
                 self.logger.info(res.content)
                 self.logger.info("\n\n\n\n")
 
-                if res.status_code == 501 or res.status_code == 403:
+                if res.status_code == 501:
+                    #or res.status_code == 403:
                     self.logger.error("WARNING: Got error status code: %s, reason: %s." % (res.status_code, res.reason))
+
                     if attempts_error_status_code > 0:
                         self.logger.error("Trying to solve by logging in.")
                         self.login()
@@ -165,7 +167,11 @@ class Fetcher:
 
 
 
+
     def login(self):
+
+        self.cookies = None
+        self.headers = None
 
         #Spread out connections a bit
         time.sleep(random.randint(0, 15))
@@ -381,14 +387,28 @@ class Fetcher:
         tree = html.fromstring(r.content)
 
         #Does thread exist?
-        if "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).count("No Thread specified.") > 0:
+        error_message = "".join(tree.xpath("//td[@class='panelsurround']/div[@class='panel']/div//text()")).lower()
+        if error_message.count("no thread specified.") > 0:
             #thread does not exist
-            self.logger.warning("No such thread")
-            self.db.thread_failed(tid)
+            self.logger.warning("No thread specified message. Moving on.")
+            self.db.thread_failed(tid,"no thread specified")
+            return False
+
+        elif error_message.count("invalid thread specified.") > 0:
+
+            self.logger.warning("Invalid thread message. Moving on.")
+            self.db.thread_failed(tid, "invalid thread specified")
             return False
 
         else:
             messages = tree.xpath("//div[@id='posts']//table[starts-with(@id,'post')]")
+
+            if len(messages) == 0:
+                self.logger.warning("No messages in thread. Moving on")
+                self.db.thread_failed(tid, "no message found")
+                return False
+
+
 
             #First page! Create thread and forums
             if page == 1:

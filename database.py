@@ -159,8 +159,8 @@ class Database:
     def thread_completed(self,tid):
         result = self.db.thread.update({"id": tid}, {'$set': {'status': 2, 'completed': datetime.utcnow()}})
 
-    def thread_failed(self,tid):
-        result = self.db.thread.update({"id": tid}, {'$set': {'status': -1, 'completed': datetime.utcnow()}})
+    def thread_failed(self,tid,message):
+        result = self.db.thread.update({"id": tid}, {'$set': {'status': -1, 'completed': datetime.utcnow()},'failmessage': message})
 
     def populate_threads_to_be_fetched(self,fromnr,tonr):
         #Add all
