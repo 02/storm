@@ -449,7 +449,7 @@ class Fetcher:
                     authorid = 0
                     self.logger.warning("No author id found for post. Assuming guest user.")
                 else:
-                    authorid = authorids.attrib['href'].split('=')[1]
+                    authorid = authorids[0].attrib['href'].split('=')[1]
 
 
                 datestr = ''.join(message.xpath('.//td[@class="thead"][1]/text()')).strip()
